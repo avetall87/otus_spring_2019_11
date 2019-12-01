@@ -21,13 +21,13 @@ public class CsvReader implements QuestionReader {
     @Override
     public List<Question> read(String pathToCsv) {
         try {
-            CsvMapper mapper = new CsvMapper();
             CsvSchema bootstrapSchema = CsvSchema.builder()
                     .addColumn("question", CsvSchema.ColumnType.STRING)
                     .addArrayColumn("answers", "|")
                     .addColumn("correctAnswer")
                     .build();
 
+            CsvMapper mapper = new CsvMapper();
             mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
             mapper.enable(CsvParser.Feature.SKIP_EMPTY_LINES);
             mapper.enable(CsvParser.Feature.TRIM_SPACES);
