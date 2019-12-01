@@ -5,7 +5,7 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="questionService" class="ru.otus.spring.service.impl.QuestionServiceImpl">
-        <constructor-arg name="pathToQuestion" value="somePath"/>
+        <property name="pathToQuestion" value="somePath"/>
     </bean>
 
 </beans>
