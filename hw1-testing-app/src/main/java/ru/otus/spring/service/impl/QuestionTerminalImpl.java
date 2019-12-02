@@ -54,7 +54,7 @@ public class QuestionTerminalImpl implements QuestionTerminal {
         System.out.println("Укажите номер правильного ответа:");
 
         for (int i = 0; i < question.getAnswers().size(); i++) {
-            System.out.println((i + 1) + ". " + question.getAnswers().get(i).getAnswer());
+            System.out.println(getQuestionNumber(i) + ". " + question.getAnswers().get(i).getAnswer());
         }
 
         int userAnswerNumber = scanner.nextInt();
@@ -62,6 +62,10 @@ public class QuestionTerminalImpl implements QuestionTerminal {
         if (question.getAnswers().get(userAnswerNumber - 1).isCorrect()) {
             correctAnswerCount++;
         }
+    }
+
+    private int getQuestionNumber(int i) {
+        return i + 1;
     }
 
     private boolean isContinueTesting(String userAnswer) {
