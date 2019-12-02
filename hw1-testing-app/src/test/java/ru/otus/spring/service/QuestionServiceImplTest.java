@@ -14,7 +14,7 @@ class QuestionServiceImplTest {
 
     @BeforeAll
     static void setUp() {
-        context = new ClassPathXmlApplicationContext("/spring-context-path_to_questions.xml");
+        context = new ClassPathXmlApplicationContext("/spring-context-test.xml");
     }
 
     @Test

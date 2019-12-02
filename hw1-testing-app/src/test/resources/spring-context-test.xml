@@ -4,8 +4,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="questionReader" class="ru.otus.spring.readers.impl.CsvReader"/>
+
     <bean id="questionService" class="ru.otus.spring.service.impl.QuestionServiceImpl">
-        <property name="pathToQuestion" value="somePath"/>
+        <constructor-arg name="pathToQuestion" value="somePath"/>
+        <constructor-arg name="converterService" ref="questionReader"/>
     </bean>
 
 </beans>

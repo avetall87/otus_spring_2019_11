@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.dto.QuestionDto;
@@ -14,8 +15,10 @@ import ru.otus.spring.readers.QuestionReader;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class CsvReader implements QuestionReader {
 
     @Override
@@ -39,10 +42,11 @@ public class CsvReader implements QuestionReader {
 
             return readValues.readAll()
                     .stream()
+                    .filter(Objects::nonNull)
                     .map(QuestionMapper::map)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            System.out.println("Error occurred while loading many to many relationship from file = " + pathToCsv + "\n" + e.getMessage());
+            log.error("Something else is wrong here", e);
             return Collections.emptyList();
         }
     }

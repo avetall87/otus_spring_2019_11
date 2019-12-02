@@ -7,9 +7,12 @@
     <bean id="questionReader" class="ru.otus.spring.readers.impl.CsvReader"/>
 
     <bean id="questionService" class="ru.otus.spring.service.impl.QuestionServiceImpl">
-        <constructor-arg name="pathToQuestion" value="somePath"/>
+        <constructor-arg name="pathToQuestion" value="csv/question.csv"/>
         <constructor-arg name="converterService" ref="questionReader"/>
+    </bean>
 
+    <bean id="questionTerminal" class="ru.otus.spring.service.impl.QuestionTerminalImpl">
+        <constructor-arg name="questionService" ref="questionService"/>
     </bean>
 
 </beans>
