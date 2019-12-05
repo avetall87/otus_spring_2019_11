@@ -1,4 +1,4 @@
-package ru.otus.spring.readers.impl;
+package ru.otus.spring.dao.impl;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -7,10 +7,10 @@ import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
+import ru.otus.spring.dao.QuestionReader;
+import ru.otus.spring.dao.dto.QuestionDto;
+import ru.otus.spring.dao.mappers.QuestionMapper;
 import ru.otus.spring.domain.Question;
-import ru.otus.spring.dto.QuestionDto;
-import ru.otus.spring.mappers.QuestionMapper;
-import ru.otus.spring.readers.QuestionReader;
 
 import java.io.File;
 import java.util.Collections;

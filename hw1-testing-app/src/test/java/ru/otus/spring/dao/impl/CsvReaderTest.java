@@ -1,12 +1,12 @@
-package ru.otus.spring.readers.impl;
+package ru.otus.spring.dao.impl;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.otus.spring.dao.QuestionReader;
 import ru.otus.spring.domain.Answer;
 import ru.otus.spring.domain.Question;
-import ru.otus.spring.readers.QuestionReader;
 
 import java.util.List;
 

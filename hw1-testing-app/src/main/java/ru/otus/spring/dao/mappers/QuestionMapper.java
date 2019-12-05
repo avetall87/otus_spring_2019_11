@@ -1,8 +1,8 @@
-package ru.otus.spring.mappers;
+package ru.otus.spring.dao.mappers;
 
+import ru.otus.spring.dao.dto.QuestionDto;
 import ru.otus.spring.domain.Answer;
 import ru.otus.spring.domain.Question;
-import ru.otus.spring.dto.QuestionDto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
