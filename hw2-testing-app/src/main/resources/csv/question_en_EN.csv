@@ -6,4 +6,4 @@ What dish is it customary to decorate with birthday candles?                    
 How much will (2 + 2) ^ 3, 12 | 24 | 36 | 64, 64
 What does the Exception class inherit from, Throwable | Error | Serializable, Throwable
 What number does index numbering in java start with, 0 | 1 | I can set my numbering, 0
-What happens when this statement is executed String str = null; str.length, 4 | NullPointerException | "Nothing, expression is simply ignored", NullPointerException
+What happens when this statement is executed String str = null; str.length, 4 | NullPointerException | Nothing expression is simply ignored, NullPointerException

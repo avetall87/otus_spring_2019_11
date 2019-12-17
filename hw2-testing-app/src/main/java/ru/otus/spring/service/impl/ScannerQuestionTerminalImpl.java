@@ -69,20 +69,24 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
 
         int userAnswerNumber = getUserAnswerNumber(scanner);
 
-        checkAnswer(question, userAnswerNumber);
+        if (userAnswerNumber > 0) {
+            checkAnswer(question, userAnswerNumber);
+        }
     }
 
     private int getUserAnswerNumber(Scanner scanner) {
-        return scanner.nextInt();
+        String line = scanner.nextLine();
+
+        if (!line.matches("\\d+")) {
+            return 0;
+        }
+
+        return Integer.parseInt(line);
     }
 
     private void checkAnswer(Question question, int userAnswerNumber) {
-        try {
-            if (question.getAnswers().get(userAnswerNumber - 1).isCorrect()) {
-                correctAnswerCount++;
-            }
-        } catch (IndexOutOfBoundsException ex) {
-            log.error("CheckAnswer exception for userAnswerNumber={}", userAnswerNumber);
+        if (question.getAnswers().get(userAnswerNumber - 1).isCorrect()) {
+            correctAnswerCount++;
         }
     }
 
