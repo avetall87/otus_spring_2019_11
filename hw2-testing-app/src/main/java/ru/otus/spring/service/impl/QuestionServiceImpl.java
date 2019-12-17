@@ -20,4 +20,9 @@ public class QuestionServiceImpl implements QuestionService {
         return converterService.read(pathToQuestion);
     }
 
+    @Override
+    public int getQuestionCount() {
+        return converterService.read(pathToQuestion).size();
+    }
+
 }

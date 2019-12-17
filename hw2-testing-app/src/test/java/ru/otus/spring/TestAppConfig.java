@@ -1,10 +1,8 @@
-package ru.otus.spring.config;
+package ru.otus.spring;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.util.Assert;
@@ -20,19 +18,16 @@ import java.util.Locale;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Configuration
-@PropertySource(value = "classpath:application.properties")
-public class AppConfig {
+public class TestAppConfig {
 
     private final String pathToQuestion;
     private final Locale defaultLocale;
     private final Integer numberOfCorrectAnswers;
 
-    public AppConfig(@Value("${path.to.question}") String pathToQuestion,
-                     @Value("${application.locale}") String defaultLocale,
-                     @Value("${number.correct.answers}") Integer numberOfCorrectAnswers) {
-        this.pathToQuestion = pathToQuestion;
-        this.defaultLocale = new Locale(defaultLocale);
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
+    public TestAppConfig() {
+        this.pathToQuestion = "csv/question.csv";
+        this.defaultLocale = new Locale("ru_RU");
+        this.numberOfCorrectAnswers = 1;
     }
 
     @Bean

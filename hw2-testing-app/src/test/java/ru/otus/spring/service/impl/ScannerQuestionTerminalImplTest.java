@@ -45,7 +45,7 @@ class ScannerQuestionTerminalImplTest {
         when(scanner.nextLine()).thenReturn("да");
         when(scanner.nextInt()).thenReturn(1);
 
-        ScannerQuestionTerminalImpl questionTerminal = new ScannerQuestionTerminalImpl(questionService);
+        ScannerQuestionTerminalImpl questionTerminal = new ScannerQuestionTerminalImpl(questionService, null, 1);
         Field field = questionTerminal.getClass().getDeclaredField(TESTING_FIELD_NAME);
         field.setAccessible(true);
 
@@ -61,7 +61,7 @@ class ScannerQuestionTerminalImplTest {
         when(scanner.nextLine()).thenReturn("да");
         when(scanner.nextInt()).thenReturn(2);
 
-        ScannerQuestionTerminalImpl questionTerminal = new ScannerQuestionTerminalImpl(questionService);
+        ScannerQuestionTerminalImpl questionTerminal = new ScannerQuestionTerminalImpl(questionService, null, 1);
         Field field = questionTerminal.getClass().getDeclaredField(TESTING_FIELD_NAME);
         field.setAccessible(true);
 

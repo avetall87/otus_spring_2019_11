@@ -3,6 +3,7 @@ package ru.otus.spring.service.impl;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.MessageSourceAccessor;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.service.QuestionService;
 import ru.otus.spring.service.QuestionTerminal;
@@ -17,10 +18,10 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 @RequiredArgsConstructor
 public class ScannerQuestionTerminalImpl implements QuestionTerminal {
 
-    private static final String WELCOME = "Здравствуйте, Вы готовы пройти тестирование ? [да/нет]";
-    private static final String CONTINUE_TESTING = "да";
-
     private final QuestionService questionService;
+    private final MessageSourceAccessor messageSourceAccessor;
+    private final Integer numberOFCorrectAnswers;
+
 
     private int correctAnswerCount;
     private int totalQuestionsCount;
@@ -37,29 +38,51 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
 
     private void startTesting(Scanner scanner, List<Question> questions) {
         try {
-            System.out.println(WELCOME);
+            System.out.println(messageSourceAccessor.getMessage("message.welcome"));
             if (isContinueTesting(scanner.nextLine())) {
                 questions.forEach(question -> askQuestion(question, scanner));
-                System.out.println("Вы ответили на " + correctAnswerCount + " из " + totalQuestionsCount + " вопросов");
+                printResult();
             }
         } catch (Exception ex) {
             log.error("Testing process exception", ex);
         }
     }
 
+    private void printResult() {
+        System.out.println(messageSourceAccessor.getMessage("message.total.answers", new Object[]{correctAnswerCount, totalQuestionsCount}));
+
+        if (correctAnswerCount >= numberOFCorrectAnswers) {
+            System.out.println(messageSourceAccessor.getMessage("message.result.success"));
+        } else {
+            System.out.println(messageSourceAccessor.getMessage("message.result.fail", new Object[]{numberOFCorrectAnswers}));
+        }
+    }
+
     private void askQuestion(Question question, Scanner scanner) {
         System.out.println();
-        System.out.println("Вопрос: " + question.getQuestion());
-        System.out.println("Укажите номер правильного ответа:");
+        System.out.println(messageSourceAccessor.getMessage("message.question.number", new Object[]{question.getQuestion()}));
+        System.out.println(messageSourceAccessor.getMessage("message.question.correct.number"));
 
         for (int i = 0; i < question.getAnswers().size(); i++) {
             System.out.println(getQuestionNumber(i) + ". " + question.getAnswers().get(i).getAnswer());
         }
 
-        int userAnswerNumber = scanner.nextInt();
+        int userAnswerNumber = getUserAnswerNumber(scanner);
 
-        if (question.getAnswers().get(userAnswerNumber - 1).isCorrect()) {
-            correctAnswerCount++;
+        checkAnswer(question, userAnswerNumber);
+    }
+
+    private int getUserAnswerNumber(Scanner scanner) {
+        return scanner.nextInt();
+    }
+
+    private void checkAnswer(Question question, int userAnswerNumber) {
+        try {
+            if (question.getAnswers().get(userAnswerNumber - 1).isCorrect()) {
+                correctAnswerCount++;
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            log.error("CheckAnswer exception for userAnswerNumber={}", userAnswerNumber);
         }
     }
 
@@ -68,6 +91,6 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
     }
 
     private boolean isContinueTesting(String userAnswer) {
-        return CONTINUE_TESTING.equalsIgnoreCase(userAnswer);
+        return messageSourceAccessor.getMessage("user.answer.continue").equalsIgnoreCase(userAnswer);
     }
 }
