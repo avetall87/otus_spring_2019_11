@@ -50,9 +50,9 @@ public class AppConfig {
     }
 
     @Bean
-    public QuestionService questionService(QuestionReader questionReader) {
+    public QuestionService questionService(QuestionReader questionReader, MessageSourceAccessor messageSourceAccessor) {
         if (isEmpty(pathToQuestion)) {
-            throw new IllegalArgumentException("Не указан путь к файлу с вопросами !");
+            throw new IllegalArgumentException(messageSourceAccessor.getMessage("system.message.data.file.not.found"));
         }
         return new QuestionServiceImpl(pathToQuestion, questionReader);
     }
@@ -64,24 +64,23 @@ public class AppConfig {
 
     @Bean
     public QuestionTerminal questionTerminal(QuestionService questionService, MessageSourceAccessor messageSourceAccessor) {
-        checkQuestionsConfig(questionService.getQuestionCount());
+        checkQuestionsConfig(questionService.getQuestionCount(), messageSourceAccessor);
         return new ScannerQuestionTerminalImpl(questionService, messageSourceAccessor, numberOfCorrectAnswers);
     }
 
-    // в проверке будет обращение к сервису вопросов который попробует загрузить список вопросов и проверить их (тут есть оверхед из-за получения списка вопросов - но если ничего не загрузиться то и запуск приложения будет не актуален !)
-    private void checkQuestionsConfig(int questionCount) {
-        Assert.notNull(numberOfCorrectAnswers, "Не задано кол-во правельных ответов");
+    private void checkQuestionsConfig(int questionCount, MessageSourceAccessor messageSourceAccessor) {
+        Assert.notNull(numberOfCorrectAnswers, messageSourceAccessor.getMessage("system.message.empty.correct.answer"));
 
         if (questionCount > 0) {
             if (numberOfCorrectAnswers <= 0) {
-                throw new IllegalArgumentException("Кол-во правельных ответов должно быть больше 0");
+                throw new IllegalArgumentException(messageSourceAccessor.getMessage("system.message.correct.answer.count"));
             }
 
             if (questionCount < numberOfCorrectAnswers) {
-                throw new IllegalArgumentException("Кол-во правельных ответов превышает общее вол-во вопросов");
+                throw new IllegalArgumentException(messageSourceAccessor.getMessage("system.message.many.correct.answer"));
             }
         } else {
-            throw new RuntimeException("Не удалось загрузить вопросы для тестирования или файл с вопросами не заполнен");
+            throw new RuntimeException(messageSourceAccessor.getMessage("system.message.fail.load.question"));
         }
     }
 }

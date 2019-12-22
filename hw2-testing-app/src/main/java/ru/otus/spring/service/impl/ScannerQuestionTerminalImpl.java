@@ -22,7 +22,6 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
     private final MessageSourceAccessor messageSourceAccessor;
     private final Integer numberOFCorrectAnswers;
 
-
     private int correctAnswerCount;
     private int totalQuestionsCount;
 
@@ -44,7 +43,7 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
                 printResult();
             }
         } catch (Exception ex) {
-            log.error("Testing process exception", ex);
+            log.error(messageSourceAccessor.getMessage("system.testing.process.exception"), ex);
         }
     }
 
