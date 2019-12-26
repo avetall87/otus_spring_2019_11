@@ -1,0 +1,55 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.2.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'ru.otus.spring'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+test {
+	useJUnitPlatform()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	compile 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	compile "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonDataformatCsvVersion}"
+	compile "org.apache.commons:commons-lang3:${apacheCommonsLang3Version}"
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation "org.mockito:mockito-inline:${mockitoInlineVersion}"
+	testCompile "org.mockito:mockito-core:${mockitoCoreVersion}"
+	testCompile "org.mockito:mockito-junit-jupiter:${mockitoJunitJupiterVersion}"
+	testCompile "org.assertj:assertj-core:${assertjVersion}"
+	testCompile "org.springframework:spring-test:${springVersion}"
+	testCompile "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+	testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
+	test.useJUnitPlatform() // fix "test events not received" bug in IDEA
+	testCompile "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
+}
+
+
