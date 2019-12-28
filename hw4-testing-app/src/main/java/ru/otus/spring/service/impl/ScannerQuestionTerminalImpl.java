@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.service.QuestionService;
 import ru.otus.spring.service.QuestionTerminal;
@@ -15,6 +17,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Data
 @Slf4j
+@ShellComponent
 @RequiredArgsConstructor
 public class ScannerQuestionTerminalImpl implements QuestionTerminal {
 
@@ -35,6 +38,7 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
         }
     }
 
+    @ShellMethod
     private void startTesting(Scanner scanner, List<Question> questions) {
         try {
             System.out.println(messageSourceAccessor.getMessage("message.welcome"));
