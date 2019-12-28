@@ -1,0 +1,10 @@
+application:
+  locale: ru_RU
+
+path:
+  to:
+    question: csv/question.csv
+
+number:
+  correct:
+    answers: 5
