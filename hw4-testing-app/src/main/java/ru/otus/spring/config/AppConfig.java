@@ -61,9 +61,9 @@ public class AppConfig {
     }
 
     @Bean
-    public QuestionTerminal questionTerminal(QuestionService questionService, MessageSourceAccessor messageSourceAccessor) {
+    public Integer numberOfCorrectAnswers(QuestionService questionService, MessageSourceAccessor messageSourceAccessor) {
         checkQuestionsConfig(questionService.getQuestionCount(), messageSourceAccessor);
-        return new ScannerQuestionTerminalImpl(questionService, messageSourceAccessor, numberOfCorrectAnswers);
+        return numberOfCorrectAnswers;
     }
 
     private void checkQuestionsConfig(int questionCount, MessageSourceAccessor messageSourceAccessor) {

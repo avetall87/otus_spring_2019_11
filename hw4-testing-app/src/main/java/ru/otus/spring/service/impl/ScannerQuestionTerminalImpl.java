@@ -38,7 +38,7 @@ public class ScannerQuestionTerminalImpl implements QuestionTerminal {
         }
     }
 
-    @ShellMethod
+    @ShellMethod(value = "Hello")
     private void startTesting(Scanner scanner, List<Question> questions) {
         try {
             System.out.println(messageSourceAccessor.getMessage("message.welcome"));

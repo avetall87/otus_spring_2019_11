@@ -36,3 +36,7 @@ out/
 .vscode/
 /.gradle/
 /.idea/
+
+
+### Application ###
+spring-shell.log

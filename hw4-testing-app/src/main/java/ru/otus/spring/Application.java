@@ -8,9 +8,9 @@ import ru.otus.spring.service.QuestionTerminal;
 import java.util.Scanner;
 
 @SpringBootApplication
-public class DemoApplication {
+public class Application {
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 		QuestionTerminal questionTerminal = context.getBean(QuestionTerminal.class);
 		questionTerminal.star(new Scanner(System.in));
 		context.close();
