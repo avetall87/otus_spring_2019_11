@@ -1,5 +1,6 @@
 package ru.otus.spring.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,14 @@ public class AppConfig {
         if (isEmpty(pathToQuestion)) {
             throw new IllegalArgumentException(messageSourceAccessor.getMessage("system.message.data.file.not.found"));
         }
-        return new QuestionServiceImpl(pathToQuestion, questionReader);
+
+        String localePathToQuestion = pathToQuestion;
+
+        if (!StringUtils.isEmpty(defaultLocale.getDisplayName()) &&  !defaultLocale.getDisplayName().equalsIgnoreCase("ru_RU")) {
+            localePathToQuestion = pathToQuestion.replaceAll("\\.csv", "_" + defaultLocale.getDisplayName() + "\\.csv");
+        }
+
+        return new QuestionServiceImpl(localePathToQuestion, questionReader);
     }
 
     @Bean
