@@ -1,0 +1,10 @@
+application:
+  locale: en_EN
+
+path:
+  to:
+    question: csv/question.csv
+
+number:
+  correct:
+    answers: 1
