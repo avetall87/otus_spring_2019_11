@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.otus.spring.TestAppContextRunner;
 import ru.otus.spring.service.impl.QuestionServiceImpl;
 
-@DisplayName("Тест для проверки сервиса вопосов")
+@DisplayName("Тест для проверки сервиса вопросов")
 class QuestionServiceImplTest extends TestAppContextRunner {
 
     @Test

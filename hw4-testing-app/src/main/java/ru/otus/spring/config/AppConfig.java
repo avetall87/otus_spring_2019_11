@@ -1,9 +1,12 @@
 package ru.otus.spring.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.util.Assert;
@@ -15,6 +18,7 @@ import ru.otus.spring.service.impl.QuestionServiceImpl;
 import ru.otus.spring.service.impl.ScannerQuestionTerminalImpl;
 
 import java.util.Locale;
+import java.util.Scanner;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -52,7 +56,14 @@ public class AppConfig {
         if (isEmpty(pathToQuestion)) {
             throw new IllegalArgumentException(messageSourceAccessor.getMessage("system.message.data.file.not.found"));
         }
-        return new QuestionServiceImpl(pathToQuestion, questionReader);
+
+        String localePathToQuestion = pathToQuestion;
+
+        if (!StringUtils.isEmpty(defaultLocale.getDisplayName()) &&  !defaultLocale.getDisplayName().equalsIgnoreCase("ru_RU")) {
+            localePathToQuestion = pathToQuestion.replaceAll("\\.csv", "_" + defaultLocale.getDisplayName() + "\\.csv");
+        }
+
+        return new QuestionServiceImpl(localePathToQuestion, questionReader);
     }
 
     @Bean
@@ -80,5 +91,11 @@ public class AppConfig {
         } else {
             throw new RuntimeException(messageSourceAccessor.getMessage("system.message.fail.load.question"));
         }
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Scanner scanner() {
+        return new Scanner(System.in);
     }
 }

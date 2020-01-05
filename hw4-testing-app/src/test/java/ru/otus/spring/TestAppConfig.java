@@ -13,6 +13,7 @@ import ru.otus.spring.service.QuestionTerminal;
 import ru.otus.spring.service.impl.QuestionServiceImpl;
 import ru.otus.spring.service.impl.ScannerQuestionTerminalImpl;
 
+import javax.annotation.PostConstruct;
 import java.util.Locale;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -79,4 +80,10 @@ public class TestAppConfig {
             throw new RuntimeException("Не удалось загрузить вопросы для тестирования или файл с вопросами не заполнен");
         }
     }
+
+    @PostConstruct
+    public void postConstruct() {
+        System.out.println("TestAppConfig");
+    }
+
 }
