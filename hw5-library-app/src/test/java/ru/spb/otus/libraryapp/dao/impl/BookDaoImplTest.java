@@ -10,7 +10,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import ru.spb.otus.libraryapp.controller.LibraryController;
+import ru.spb.otus.libraryapp.controller.AuthorController;
 import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.dao.impl.mapper.BookRowMapper;
 import ru.spb.otus.libraryapp.domain.Author;
@@ -24,7 +24,7 @@ import static org.springframework.dao.support.DataAccessUtils.singleResult;
 
 @JdbcTest
 @Sql(scripts = "classpath:books_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = LibraryController.class))
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = AuthorController.class))
 class BookDaoImplTest {
 
     private final long BASE_BOOK_ID = 100L;

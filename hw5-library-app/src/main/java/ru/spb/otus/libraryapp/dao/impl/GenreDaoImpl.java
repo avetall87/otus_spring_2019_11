@@ -40,7 +40,11 @@ public class GenreDaoImpl implements GenreDao {
     public void update(Genre genre) {
         String sql = "update genres set name = :name where id = :id";
 
-        jdbcTemplate.update(sql, new MapSqlParameterSource("id", genre.getId()));
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue("name", genre.getName());
+        source.addValue("id", genre.getId());
+
+        jdbcTemplate.update(sql, source);
     }
 
     @Override

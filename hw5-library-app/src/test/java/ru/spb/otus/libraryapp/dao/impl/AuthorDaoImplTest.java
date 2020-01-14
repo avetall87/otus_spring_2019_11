@@ -10,7 +10,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import ru.spb.otus.libraryapp.controller.LibraryController;
+import ru.spb.otus.libraryapp.controller.AuthorController;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
 import ru.spb.otus.libraryapp.dao.impl.mapper.AuthorRowMapper;
 import ru.spb.otus.libraryapp.domain.Author;
@@ -19,7 +19,7 @@ import static org.springframework.dao.support.DataAccessUtils.singleResult;
 
 @JdbcTest
 @Sql("classpath:authors_test_data.sql")
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = LibraryController.class))
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = AuthorController.class))
 class AuthorDaoImplTest {
 
     private final long AUTHOR_ID = 100L;

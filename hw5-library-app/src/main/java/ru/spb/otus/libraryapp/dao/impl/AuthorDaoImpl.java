@@ -1,19 +1,22 @@
 package ru.spb.otus.libraryapp.dao.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
 import ru.spb.otus.libraryapp.dao.impl.mapper.AuthorRowMapper;
 import ru.spb.otus.libraryapp.domain.Author;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyMap;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class AuthorDaoImpl implements AuthorDao {
@@ -22,7 +25,14 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findById(Long id) {
-        return jdbcTemplate.queryForObject("select * from authors where id = :id", new MapSqlParameterSource("id", id), new AuthorRowMapper());
+        try {
+            return jdbcTemplate.queryForObject("select * from authors where id = :id", new MapSqlParameterSource("id", id), new AuthorRowMapper());
+        } catch (IncorrectResultSizeDataAccessException ex) {
+            return null;
+        } catch (Exception ex) {
+            log.error("Author findById exception", ex);
+            return null;
+        }
     }
 
     @Override
@@ -33,13 +43,15 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public void create(Author author) {
         String sql = "insert into authors (first_name, last_name, patronymic) values(:first_name, :last_name, :patronymic)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("first_name", author.getFirstName());
         source.addValue("last_name", author.getLastName());
         source.addValue("patronymic", author.getPatronymic());
 
-        jdbcTemplate.update(sql, source);
+        jdbcTemplate.update(sql, source, keyHolder);
+        author.setId((long) keyHolder.getKey());
     }
 
     @Override
