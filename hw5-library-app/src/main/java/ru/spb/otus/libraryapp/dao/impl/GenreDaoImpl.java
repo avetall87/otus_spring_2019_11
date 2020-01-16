@@ -3,6 +3,8 @@ package ru.spb.otus.libraryapp.dao.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.spb.otus.libraryapp.dao.GenreDao;
 import ru.spb.otus.libraryapp.dao.impl.mapper.GenreRowMapper;
@@ -32,8 +34,10 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public void create(Genre genre) {
         String sql = "insert into genres (name) values(:name)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(sql, new MapSqlParameterSource("name", genre.getName()));
+        jdbcTemplate.update(sql, new MapSqlParameterSource("name", genre.getName()), keyHolder);
+        genre.setId((long) keyHolder.getKey());
     }
 
     @Override

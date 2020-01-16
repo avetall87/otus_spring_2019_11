@@ -11,6 +11,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class GenreController {
 
         genreService.update(genre);
 
-        System.out.println(format("New author was successfully created with id=%s", genre.getId()));
+        System.out.println(format("New genre was successfully created with id=%s", genre.getId()));
     }
 
     @ShellMethod(value = "Find genre by id", key = "genre_find_by_id")
@@ -33,13 +34,19 @@ public class GenreController {
         if (nonNull(genre)) {
             System.out.println(genre);
         } else {
-            System.out.println(format("Author was not found with id=%s", id));
+            System.out.println(format("Genre was not found with id=%s", id));
         }
     }
 
     @ShellMethod(value = "Find all genres", key = "genre_find_all")
     public void findAll() {
-        genreService.findAll().forEach(System.out::println);
+        List<Genre> genres = genreService.findAll();
+
+        if (isNotEmpty(genres)) {
+            genres.forEach(System.out::println);
+        } else {
+            System.out.println("Genres not found !");
+        }
     }
 
     @ShellMethod(value = "Update genre by id", key = "update_genre")
@@ -51,7 +58,7 @@ public class GenreController {
         System.out.println(format("Genre was successfully updated with id=%s", id));
     }
 
-    @ShellMethod(value = "Delete author by id", key = "author_delete_by_id")
+    @ShellMethod(value = "Delete author by id", key = "genre_delete_by_id")
     public void deleteById(@ShellOption("--id") Long id) {
         genreService.deleteById(id);
 

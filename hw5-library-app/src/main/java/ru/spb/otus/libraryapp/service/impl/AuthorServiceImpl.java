@@ -60,6 +60,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> findAuthorsByBookId(Long bookId) {
-        return null;
+        return authorDao.findAuthorsByBookId(bookId);
     }
 }

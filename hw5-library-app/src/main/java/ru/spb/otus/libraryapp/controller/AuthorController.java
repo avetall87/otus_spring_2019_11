@@ -8,8 +8,11 @@ import org.springframework.shell.standard.ShellOption;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.service.AuthorService;
 
+import java.util.List;
+
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Slf4j
 @ShellComponent(value = "author")
@@ -43,7 +46,13 @@ public class AuthorController {
 
     @ShellMethod(value = "Find all authors", key = "author_find_all")
     public void findAll() {
-        authorService.findAll().forEach(System.out::println);
+        List<Author> authors = authorService.findAll();
+
+        if (isNotEmpty(authors)) {
+            authors.forEach(System.out::println);
+        } else {
+            System.out.println("Authors not found !");
+        }
     }
 
     @ShellMethod(value = "Update author by id", key = "update_author")
