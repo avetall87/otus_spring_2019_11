@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.service.AuthorService;
 
@@ -18,7 +19,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @ShellMethod(value = "Create new author", key = "author_add_new")
-    public void add(String firstName, String lastName, String patronymic) {
+    public void add(@ShellOption("--f") String firstName, @ShellOption("--l") String lastName, @ShellOption("--p") String patronymic) {
         Author newAuthor = Author.builder()
                                  .firstName(firstName)
                                  .lastName(lastName)
@@ -31,7 +32,7 @@ public class AuthorController {
     }
 
     @ShellMethod(value = "Find author by id", key = "author_find_by_id")
-    public void findById(Long id) {
+    public void findById(@ShellOption("--id") Long id) {
         Author author = authorService.findById(id);
         if (nonNull(author)) {
             System.out.println(author);
@@ -46,7 +47,7 @@ public class AuthorController {
     }
 
     @ShellMethod(value = "Update author by id", key = "update_author")
-    public void update(Long id, String firstName, String lastName, String patronymic) {
+    public void update(@ShellOption("--id") Long id, @ShellOption("--f") String firstName, @ShellOption("--l") String lastName, @ShellOption("--p") String patronymic) {
 
         authorService.update(Author.builder()
                                    .id(id)
@@ -59,7 +60,7 @@ public class AuthorController {
     }
 
     @ShellMethod(value = "Delete author by id", key = "author_delete_by_id")
-    public void deleteById(Long id) {
+    public void deleteById(@ShellOption("--id") Long id) {
         authorService.deleteById(id);
 
         System.out.println(format("Author was successfully deleted by id=%s", id));
