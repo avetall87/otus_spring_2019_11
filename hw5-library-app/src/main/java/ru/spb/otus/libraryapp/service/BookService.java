@@ -16,7 +16,6 @@ public interface BookService {
     List<Book> findByAuthor(Author author);
     List<Book> findByGenre(Genre genre);
 
-
     void addAuthor(Book book, Author author);
     void addGenre(Book book, Genre genre);
 

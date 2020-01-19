@@ -26,7 +26,12 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public Author findById(Long id) {
         try {
-            return jdbcTemplate.queryForObject("select * from authors where id = :id", new MapSqlParameterSource("id", id), new AuthorRowMapper());
+            return jdbcTemplate.queryForObject("select id, first_name, last_name, patronymic " +
+                            "from authors " +
+                            "where id = :id",
+                    new MapSqlParameterSource("id", id),
+                    new AuthorRowMapper());
+
         } catch (IncorrectResultSizeDataAccessException ex) {
             return null;
         } catch (Exception ex) {
@@ -37,12 +42,13 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public List<Author> findAll() {
-        return jdbcTemplate.query("select * from authors", new AuthorRowMapper());
+        return jdbcTemplate.query("select id, first_name, last_name, patronymic from authors", new AuthorRowMapper());
     }
 
     @Override
     public void create(Author author) {
-        String sql = "insert into authors (first_name, last_name, patronymic) values(:first_name, :last_name, :patronymic)";
+        String sql = "insert into authors (first_name, last_name, patronymic) " +
+                "values(:first_name, :last_name, :patronymic)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource source = new MapSqlParameterSource();
@@ -56,7 +62,11 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void update(Author author) {
-       String sql = "update authors set first_name = :first_name, last_name = :last_name, patronymic = :patronymic where id = :id";
+        String sql = "update authors set" +
+                "first_name = :first_name, " +
+                "last_name = :last_name, " +
+                "patronymic = :patronymic " +
+                "where id = :id";
 
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("first_name", author.getFirstName());
@@ -81,6 +91,9 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public List<Author> findAuthorsByBookId(Long bookId) {
-        return jdbcTemplate.query("select * from authors a join authors_books ab on a.id = ab.author_id where ab.book_id = :book_id", new MapSqlParameterSource("book_id", bookId), new AuthorRowMapper());
+        return jdbcTemplate.query("select id, first_name, last_name, patronymic " +
+                "from authors a " +
+                "join authors_books ab on a.id = ab.author_id " +
+                "where ab.book_id = :book_id", new MapSqlParameterSource("book_id", bookId), new AuthorRowMapper());
     }
 }

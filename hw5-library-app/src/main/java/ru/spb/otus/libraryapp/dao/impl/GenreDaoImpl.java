@@ -23,17 +23,18 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public Genre findById(Long id) {
-        return singleResult(jdbcTemplate.query("select * from genres where id = :id", new MapSqlParameterSource("id",id), new GenreRowMapper()));
+        return singleResult(jdbcTemplate.query("select id, name from genres where id = :id", new MapSqlParameterSource("id", id), new GenreRowMapper()));
     }
 
     @Override
     public List<Genre> findAll() {
-        return jdbcTemplate.query("select * from genres",new GenreRowMapper());
+        return jdbcTemplate.query("select id, name from genres", new GenreRowMapper());
     }
 
     @Override
     public void create(Genre genre) {
-        String sql = "insert into genres (name) values(:name)";
+        String sql = "insert into genres (name) " +
+                "values(:name)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(sql, new MapSqlParameterSource("name", genre.getName()), keyHolder);
@@ -42,7 +43,9 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public void update(Genre genre) {
-        String sql = "update genres set name = :name where id = :id";
+        String sql = "update genres set " +
+                "name = :name " +
+                "where id = :id";
 
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("name", genre.getName());
@@ -63,6 +66,9 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public List<Genre> findGenresByBookId(Long bookId) {
-        return jdbcTemplate.query("select * from genres g join books_genres bg on g.id=bg.genre_id where bg.book_id = :bookId", new MapSqlParameterSource("bookId", bookId), new GenreRowMapper());
+        return jdbcTemplate.query("select id, name " +
+                "from genres g " +
+                "join books_genres bg on g.id=bg.genre_id " +
+                "where bg.book_id = :bookId", new MapSqlParameterSource("bookId", bookId), new GenreRowMapper());
     }
 }
