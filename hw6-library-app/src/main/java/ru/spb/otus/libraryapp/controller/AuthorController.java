@@ -75,11 +75,4 @@ public class AuthorController {
         System.out.println(format("Author was successfully deleted by id=%s", id));
     }
 
-    @ShellMethod(value = "Delete all authors", key = "author_delete_all")
-    public void deleteAll() {
-        authorService.deleteAll();
-
-        System.out.println("All authors was successfully deleted !");
-    }
-
 }

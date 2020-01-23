@@ -11,8 +11,6 @@ public interface AuthorService {
 
     void update(Author author);
 
-    void deleteAll();
-
     void deleteById(Long id);
 
     List<Author> findAuthorsByBookId(Long bookId);

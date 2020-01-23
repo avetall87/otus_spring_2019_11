@@ -46,12 +46,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional
-    public void deleteAll() {
-        authorDao.deleteAll();
-    }
-
-    @Override
-    @Transactional
     public void deleteById(Long id) {
         Assert.notNull(id, "Author id is null !");
 

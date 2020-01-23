@@ -1,10 +1,11 @@
 package ru.spb.otus.libraryapp.dao.impl;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,9 +16,11 @@ import ru.spb.otus.libraryapp.dao.AuthorDao;
 import ru.spb.otus.libraryapp.dao.impl.mapper.AuthorRowMapper;
 import ru.spb.otus.libraryapp.domain.Author;
 
+import java.util.List;
+
 import static org.springframework.dao.support.DataAccessUtils.singleResult;
 
-@JdbcTest
+@DataJpaTest
 @Sql("classpath:authors_test_data.sql")
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = AuthorController.class))
 class AuthorDaoImplTest {
@@ -76,16 +79,16 @@ class AuthorDaoImplTest {
     }
 
     @Test
-    void deleteAll() {
-        authorDao.deleteAll();
-        Assertions.assertEquals(0, jdbcTemplate.query("select * from authors", new AuthorRowMapper()).size());
-    }
-
-    @Test
     void deleteById() {
         long DELETE_AUTHOR_ID = 101L;
         authorDao.deleteById(DELETE_AUTHOR_ID);
         Long count = jdbcTemplate.queryForObject("select count(0) from authors where id = :id", new MapSqlParameterSource("id", DELETE_AUTHOR_ID), Long.class);
         Assertions.assertEquals(0, count);
+    }
+
+    @Test
+    void findAuthorsByBookId() {
+        List<Author> authors = authorDao.findAuthorsByBookId(AUTHOR_ID);
+        Assertions.assertTrue(CollectionUtils.isNotEmpty(authors));
     }
 }
