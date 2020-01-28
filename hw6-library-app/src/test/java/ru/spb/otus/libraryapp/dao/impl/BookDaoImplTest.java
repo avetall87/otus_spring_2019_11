@@ -15,7 +15,6 @@ import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.domain.Genre;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -51,23 +50,24 @@ class BookDaoImplTest {
     @Test
     void create() {
 
-        long GENRE_ID = 100L;
-        long CREATE_AUTHOR_ID = 120L;
+        String GENRE_NAME = "Жанр";
+        String CREATE_AUTHOR_NAME = "Иванов";
         Book book = Book.builder()
                 .name("test book")
                 .description("test description")
                 .authors(singletonList(Author.builder()
-                        .id(CREATE_AUTHOR_ID)
+                        .firstName(CREATE_AUTHOR_NAME)
+                        .lastName("")
+                        .patronymic("")
                         .build()))
-                /*.genres(singletonList(Genre.builder()
-                        .id(GENRE_ID)
-                        .name("test genre")
-                        .build()))*/
+                .genres(singletonList(Genre.builder()
+                        .name(GENRE_NAME)
+                        .build()))
                 .build();
 
         bookDao.save(book);
 
-        BigInteger count = (BigInteger) em.getEntityManager().createNativeQuery("select count(0) cnt from books b left join authors_books ab on b.id = ab.book_id" +
+        Long count = (Long) em.getEntityManager().createNativeQuery("select count(0) cnt from books b left join authors_books ab on b.id = ab.book_id" +
                 " left join books_genres bg on b.id = bg.book_id " +
                 " where b.id = :id")
                 .setParameter("id", book.getId())
@@ -75,7 +75,7 @@ class BookDaoImplTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(count).isNotNull();
-            //softAssertions.assertThat(count).isGreaterThan(new BigInteger());
+            softAssertions.assertThat(count).isGreaterThan(0);
         });
     }
 
