@@ -67,15 +67,17 @@ class BookDaoImplTest {
 
         bookDao.save(book);
 
-        Long count = (Long) em.getEntityManager().createNativeQuery("select count(0) cnt from books b left join authors_books ab on b.id = ab.book_id" +
-                " left join books_genres bg on b.id = bg.book_id " +
-                " where b.id = :id")
-                .setParameter("id", book.getId())
-                .getSingleResult();
+        Book result = em.find(Book.class, book.getId());
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(count).isNotNull();
-            softAssertions.assertThat(count).isGreaterThan(0);
+            softAssertions.assertThat(result).isNotNull();
+            softAssertions.assertThat(result.getId()).isGreaterThan(0);
+            softAssertions.assertThat(result.getAuthors()).isNotEmpty();
+            softAssertions.assertThat(result.getAuthors().get(0).getId()).isGreaterThan(0);
+            softAssertions.assertThat(result.getAuthors().get(0).getFirstName()).isEqualTo(CREATE_AUTHOR_NAME);
+            softAssertions.assertThat(result.getGenres()).isNotEmpty();
+            softAssertions.assertThat(result.getGenres().get(0).getId()).isGreaterThan(0);
+            softAssertions.assertThat(result.getGenres().get(0).getName()).isEqualTo(GENRE_NAME);
         });
     }
 
