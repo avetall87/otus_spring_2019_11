@@ -42,6 +42,7 @@ insert into authors_books (author_id, book_id)
 values (110, 100);
 insert into authors_books (author_id, book_id)
 values (115, 101);
+
 insert into books_genres (book_id, genre_id)
 values (100, 100);
 insert into books_genres (book_id, genre_id)

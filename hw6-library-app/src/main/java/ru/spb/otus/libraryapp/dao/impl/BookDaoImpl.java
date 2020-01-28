@@ -1,7 +1,6 @@
 package ru.spb.otus.libraryapp.dao.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
@@ -9,8 +8,11 @@ import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.domain.Genre;
 
 import javax.persistence.EntityManager;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.nonNull;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Repository
 @RequiredArgsConstructor
@@ -84,65 +86,50 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void addAuthor(Long bookId, Author author) {
-        linkBookWithAuthors(bookId, Collections.singletonList(author));
+        if (nonNull(author)) {
+            Book book = em.find(Book.class, bookId);
+
+            if (nonNull(book)) {
+                if (isNotEmpty(book.getAuthors())) {
+                    book.getAuthors().add(author);
+                } else {
+                    List<Author> authors = new ArrayList<>();
+                    authors.add(author);
+                    book.setAuthors(authors);
+                }
+                save(book);
+            }
+        }
     }
 
     @Override
     public void addGenre(Long bookId, Genre genre) {
-        linkBookWithGenres(bookId, Collections.singletonList(genre));
+        if (nonNull(genre)) {
+            Book book = em.find(Book.class, bookId);
+
+            if (nonNull(book)) {
+                if (isNotEmpty(book.getAuthors())) {
+                    book.getGenres().add(genre);
+                } else {
+                    List<Genre> genres = new ArrayList<>();
+                    genres.add(genre);
+                    book.setGenres(genres);
+                }
+                save(book);
+            }
+        }
     }
 
     @Override
     public void deleteAuthor(Long bookId, Author author) {
-        unlinkAuthorFromBook(bookId, Collections.singletonList(author));
+        em.detach(em.find(Author.class, author.getId()));
+        em.createQuery("delete from Author a where a.id = :id").setParameter("id", author.getId()).executeUpdate();
     }
 
     @Override
     public void deleteGenre(Long bookId, Genre genre) {
-        unlinkGenreFromBook(bookId, Collections.singletonList(genre));
+        em.detach(em.find(Genre.class, genre.getId()));
+        em.createQuery("delete from Genre g where g.id = :id").setParameter("id", genre.getId()).executeUpdate();
     }
 
-    private void linkBookWithAuthors(Long bookId, List<Author> authors) {
-        authors.forEach(author -> {
-            MapSqlParameterSource source = new MapSqlParameterSource();
-            source.addValue("author_id", author.getId());
-            source.addValue("book_id", bookId);
-
-            /*jdbcTemplate.update("insert into authors_books (author_id, book_id) " +
-                    "values(:author_id, :book_id)", source);*/
-        });
-    }
-
-    private void unlinkAuthorFromBook(Long bookId, List<Author> authors) {
-        authors.forEach(author -> {
-            MapSqlParameterSource source = new MapSqlParameterSource();
-            source.addValue("author_id", author.getId());
-            source.addValue("book_id", bookId);
-
-            /*jdbcTemplate.update("delete from authors_books " +
-                    "where author_id = :author_id and book_id = :book_id", source);*/
-        });
-    }
-
-    private void linkBookWithGenres(Long bookId, List<Genre> genres) {
-        genres.forEach(genre -> {
-            MapSqlParameterSource source = new MapSqlParameterSource();
-            source.addValue("book_id", bookId);
-            source.addValue("genre_id", genre.getId());
-
-            /*jdbcTemplate.update("insert into books_genres (book_id, genre_id) " +
-                    "values(:book_id, :genre_id)", source);*/
-        });
-    }
-
-    private void unlinkGenreFromBook(Long bookId, List<Genre> genres) {
-        genres.forEach(genre -> {
-            MapSqlParameterSource source = new MapSqlParameterSource();
-            source.addValue("book_id", bookId);
-            source.addValue("genre_id", genre.getId());
-
-            /*jdbcTemplate.update("delete from books_genres " +
-                    "where book_id = :book_id and genre_id = :genre_id", source);*/
-        });
-    }
 }

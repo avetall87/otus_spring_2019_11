@@ -16,6 +16,7 @@ import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.domain.Genre;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 
@@ -134,19 +135,18 @@ class BookDaoImplTest {
     @Test
     void addAuthor() {
         long ADD_AUTHOR_1_ID = 130L;
-        bookDao.addAuthor(BASE_BOOK_ID, Author.builder().id(ADD_AUTHOR_1_ID).build());
+        bookDao.addAuthor(BASE_BOOK_ID, Author.builder().id(ADD_AUTHOR_1_ID).firstName("test").lastName("test").patronymic("test").build());
 
         long ADD_AUTHOR_2_ID = 140L;
-        bookDao.addAuthor(BASE_BOOK_ID, Author.builder().id(ADD_AUTHOR_2_ID).build());
+        bookDao.addAuthor(BASE_BOOK_ID, Author.builder().id(ADD_AUTHOR_2_ID).firstName("test").lastName("test").patronymic("test").build());
 
-        Long count = (Long) em.getEntityManager().createNativeQuery("select count(0) from authors_books ab where ab.author_id IN (:author_id1, :author_id2)", Long.class)
-                .setParameter("author_id1", ADD_AUTHOR_1_ID)
-                .setParameter("author_id2", ADD_AUTHOR_2_ID)
-                .getSingleResult();
+        Book book = em.find(Book.class, BASE_BOOK_ID);
+
+        List<Author> result = book.getAuthors().stream().filter(author -> (author.getId() == ADD_AUTHOR_1_ID || author.getId() == ADD_AUTHOR_2_ID)).collect(Collectors.toList());
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(count).isNotNull();
-            softAssertions.assertThat(count).isGreaterThan(0);
+            softAssertions.assertThat(result).isNotNull();
+            softAssertions.assertThat(result.size()).isGreaterThan(0);
         });
     }
 
@@ -158,14 +158,13 @@ class BookDaoImplTest {
         long CREATE_GENRE_2_ID = 120L;
         bookDao.addGenre(BASE_BOOK_ID, Genre.builder().id(CREATE_GENRE_2_ID).build());
 
-        Long count = (Long) em.getEntityManager().createNativeQuery("select count(0) from books_genres bg where bg.genre_id IN (:genre_id1, :genre_id2)", Long.class)
-                .setParameter("genre_id1", CREATE_GENRE_1_ID)
-                .setParameter("genre_id2", CREATE_GENRE_2_ID)
-                .getSingleResult();
+        Book book = em.find(Book.class, BASE_BOOK_ID);
+
+        List<Genre> result = book.getGenres().stream().filter(genre -> (genre.getId() == CREATE_GENRE_1_ID || genre.getId() == CREATE_GENRE_2_ID)).collect(Collectors.toList());
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(count).isNotNull();
-            softAssertions.assertThat(count).isGreaterThan(0);
+            softAssertions.assertThat(result).isNotNull();
+            softAssertions.assertThat(result.size()).isGreaterThan(0);
         });
     }
 
@@ -173,15 +172,19 @@ class BookDaoImplTest {
     void deleteAuthor() {
         long DELETE_AUTHOR_2_ID = 115L;
         long DELETE_AUTHOR_BOOK_ID = 101L;
+
         bookDao.deleteAuthor(DELETE_AUTHOR_BOOK_ID, Author.builder().id(DELETE_AUTHOR_2_ID).build());
 
-        Long count = (Long) em.getEntityManager().createNativeQuery("select count(0) from authors_books ab where ab.author_id = :author_id", Long.class)
-                .setParameter("author_id", DELETE_AUTHOR_2_ID)
-                .getSingleResult();
+        Book book = em.find(Book.class, DELETE_AUTHOR_BOOK_ID);
+
+        List<Author> result = book.getAuthors()
+                .stream()
+                .filter(author -> author.getId() == DELETE_AUTHOR_2_ID)
+                .collect(Collectors.toList());
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(count).isNotNull();
-            softAssertions.assertThat(count).isEqualTo(0);
+            softAssertions.assertThat(result).isNotNull();
+            softAssertions.assertThat(result.size()).isEqualTo(0);
         });
     }
 
@@ -191,13 +194,16 @@ class BookDaoImplTest {
         long DELETE_GENRE_BOOK_ID = 101L;
         bookDao.deleteGenre(DELETE_GENRE_BOOK_ID, Genre.builder().id(DELETE_GENRE_ID).build());
 
-        Long count = (Long) em.getEntityManager().createNativeQuery("select count(0) from books_genres bg where bg.genre_id = :genre_id", Long.class)
-                .setParameter("genre_id", DELETE_GENRE_ID)
-                .getSingleResult();
+        Book book = em.find(Book.class, DELETE_GENRE_BOOK_ID);
+
+        List<Genre> genres = book.getGenres()
+                .stream()
+                .filter(genre -> genre.getId() == DELETE_GENRE_ID)
+                .collect(Collectors.toList());
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(count).isNotNull();
-            softAssertions.assertThat(count).isEqualTo(0);
+            softAssertions.assertThat(genres).isNotNull();
+            softAssertions.assertThat(genres.size()).isEqualTo(0);
         });
     }
 }
