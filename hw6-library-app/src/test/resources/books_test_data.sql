@@ -4,6 +4,8 @@ delete
 from genres;
 delete
 from books;
+delete
+from comments;
 
 insert into authors (id, first_name, last_name, patronymic)
 values (101, '1', '2', '3');

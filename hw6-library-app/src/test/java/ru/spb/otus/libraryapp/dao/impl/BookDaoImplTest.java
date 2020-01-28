@@ -49,9 +49,9 @@ class BookDaoImplTest {
 
     @Test
     void create() {
-
         String GENRE_NAME = "Жанр";
         String CREATE_AUTHOR_NAME = "Иванов";
+
         Book book = Book.builder()
                 .name("test book")
                 .description("test description")
