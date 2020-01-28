@@ -12,8 +12,6 @@ import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 @Repository
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
@@ -32,7 +30,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void save(Book book) {
-        if (isNull(book.getId())) {
+        if (book.getId() == null) {
             em.persist(book);
         } else {
             em.merge(book);
