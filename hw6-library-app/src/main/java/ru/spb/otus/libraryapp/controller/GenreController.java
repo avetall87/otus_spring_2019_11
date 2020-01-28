@@ -65,13 +65,6 @@ public class GenreController {
         System.out.println(format("Genre was successfully deleted by id=%s", id));
     }
 
-    @ShellMethod(value = "Delete all genres", key = "genre_delete_all")
-    public void deleteAll() {
-        genreService.deleteAll();
-
-        System.out.println("All genres was successfully deleted !");
-    }
-
     @ShellMethod(value = "Find all genres by book id", key = "genre_find_all_by_bok_id")
     public void findAllByBookId(Long bookId) {
         genreService.findGenresByBookId(bookId).forEach(System.out::println);

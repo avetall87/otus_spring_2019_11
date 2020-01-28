@@ -6,19 +6,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import ru.spb.otus.libraryapp.controller.AuthorController;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
-import ru.spb.otus.libraryapp.dao.impl.mapper.AuthorRowMapper;
 import ru.spb.otus.libraryapp.domain.Author;
 
+import javax.persistence.Query;
 import java.util.List;
-
-import static org.springframework.dao.support.DataAccessUtils.singleResult;
 
 @DataJpaTest
 @Sql("classpath:authors_test_data.sql")
@@ -31,7 +28,7 @@ class AuthorDaoImplTest {
     private AuthorDao authorDao;
 
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private TestEntityManager em;
 
     @Test
     void findById() {
@@ -46,9 +43,12 @@ class AuthorDaoImplTest {
     @Test
     void create() {
         authorDao.create(Author.builder().firstName("123").lastName("456").patronymic("678").build());
-        Author author = singleResult(jdbcTemplate.query("select * from authors where first_name = :first_name",
-                new MapSqlParameterSource("first_name", "123"),
-                new AuthorRowMapper()));
+
+        Query query = em.getEntityManager().createQuery("select a from Author a  where firstName = :first_name");
+        query.setParameter("first_name", "123");
+
+        Author author = (Author) query.getSingleResult();
+
         Assertions.assertNotNull(author);
     }
 
@@ -67,7 +67,8 @@ class AuthorDaoImplTest {
                         .build()
         );
 
-        Author author = singleResult(jdbcTemplate.query("select * from authors where id = :id", new MapSqlParameterSource("id", AUTHOR_ID), new AuthorRowMapper()));
+
+        Author author = em.find(Author.class, AUTHOR_ID);
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(author).isNotNull();
@@ -82,8 +83,11 @@ class AuthorDaoImplTest {
     void deleteById() {
         long DELETE_AUTHOR_ID = 101L;
         authorDao.deleteById(DELETE_AUTHOR_ID);
-        Long count = jdbcTemplate.queryForObject("select count(0) from authors where id = :id", new MapSqlParameterSource("id", DELETE_AUTHOR_ID), Long.class);
-        Assertions.assertEquals(0, count);
+
+        Query query = em.getEntityManager().createQuery("select count(a) from Author a where id = :id");
+        query.setParameter("id", DELETE_AUTHOR_ID);
+
+        Assertions.assertEquals(0, (Long) query.getSingleResult());
     }
 
     @Test

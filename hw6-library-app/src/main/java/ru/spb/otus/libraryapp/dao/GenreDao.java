@@ -13,8 +13,6 @@ public interface GenreDao {
 
     void update(Genre genre);
 
-    void deleteAll();
-
     void deleteById(Long id);
 
     List<Genre> findGenresByBookId(Long bookId);

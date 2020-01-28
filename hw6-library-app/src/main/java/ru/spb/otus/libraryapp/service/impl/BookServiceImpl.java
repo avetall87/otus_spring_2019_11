@@ -54,14 +54,14 @@ public class BookServiceImpl implements BookService {
         if (nonNull(book.getId())) {
             bookDao.update(book);
         } else {
-            bookDao.create(book);
+            bookDao.save(book);
         }
     }
 
     @Override
     @Transactional
     public void deleteAll() {
-        bookDao.deleteAll();
+
     }
 
     @Override

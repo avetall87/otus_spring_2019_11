@@ -2,56 +2,38 @@ package ru.spb.otus.libraryapp.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.spb.otus.libraryapp.dao.BookDao;
-import ru.spb.otus.libraryapp.dao.impl.mapper.BookRowMapper;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.domain.Genre;
 
+import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
-
-import static java.util.Collections.emptyMap;
-import static org.springframework.dao.support.DataAccessUtils.singleResult;
 
 @Repository
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final EntityManager em;
 
     @Override
     public Book findById(Long id) {
-        return singleResult(jdbcTemplate.query("select id, name, description from books where id = :id", new MapSqlParameterSource("id", id), new BookRowMapper()));
+        return em.find(Book.class, id);
     }
 
     @Override
     public List<Book> findAll() {
-        return jdbcTemplate.query("select id, name, description from books", new BookRowMapper());
+        return em.createQuery("select b.id, b.name from Book b", Book.class).getResultList();
     }
 
     @Override
-    public void create(Book book) {
-        String sql = "insert into books (name, description) " +
-                "values(:name, :description)";
-
-        MapSqlParameterSource source = new MapSqlParameterSource();
-        source.addValue("name", book.getName());
-        source.addValue("description", book.getDescription());
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        int resultCode = jdbcTemplate.update(sql, source, keyHolder);
-
-        if (resultCode > 0) {
-            book.setId((long) keyHolder.getKey());
-
-            linkBookWithAuthors(book.getId(), book.getAuthors());
-            linkBookWithGenres(book.getId(), book.getGenres());
+    public void save(Book book) {
+        if (book.getId() == null) {
+            em.persist(book);
+        } else {
+            em.merge(book);
         }
     }
 
@@ -62,43 +44,42 @@ public class BookDaoImpl implements BookDao {
      */
     @Override
     public void update(Book book) {
-        String sql = "update books set " +
-                "name = :name, " +
-                "description = :description " +
-                "where id = :id";
-
-        MapSqlParameterSource source = new MapSqlParameterSource();
-        source.addValue("name", book.getName());
-        source.addValue("description", book.getDescription());
-        source.addValue("id", book.getId());
-
-        jdbcTemplate.update(sql, source);
-    }
-
-    @Override
-    public void deleteAll() {
-        jdbcTemplate.update("delete from books", emptyMap());
+        em.createQuery("update Book b set  b.name = :name, b.description = :description where b.id = :id")
+                .setParameter("name", book.getName())
+                .setParameter("description", book.getDescription())
+                .setParameter("id", book.getId())
+                .executeUpdate();
     }
 
     @Override
     public void deleteById(Long id) {
-        jdbcTemplate.update("delete from books where id = :id", new MapSqlParameterSource("id", id));
+        em.detach(Book.builder().id(id).build());
+
+        em.createQuery("delete from Book b where b.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Book> findByAuthor(Author author) {
-        return jdbcTemplate.query("select id, name, description " +
+        return em.createNativeQuery("select b.id, b.name, b.description " +
                 "from books b " +
                 "join authors_books ab on b.id = ab.book_id " +
-                "where ab.author_id = :id", new MapSqlParameterSource("id", author.getId()), new BookRowMapper());
+                "where ab.author_id = :author_id")
+                .setParameter("author_id", author.getId())
+                .getResultList();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Book> findByGenre(Genre genre) {
-        return jdbcTemplate.query("select id, name, description " +
+        return em.createNativeQuery("select b.id, b.name, b.description " +
                 "from books b " +
                 "join books_genres ab on b.id = ab.book_id " +
-                "where ab.genre_id = :id", new MapSqlParameterSource("id", genre.getId()), new BookRowMapper());
+                "where ab.genre_id = :genre_id")
+                .setParameter("genre_id", genre.getId())
+                .getResultList();
     }
 
     @Override
@@ -127,8 +108,8 @@ public class BookDaoImpl implements BookDao {
             source.addValue("author_id", author.getId());
             source.addValue("book_id", bookId);
 
-            jdbcTemplate.update("insert into authors_books (author_id, book_id) " +
-                    "values(:author_id, :book_id)", source);
+            /*jdbcTemplate.update("insert into authors_books (author_id, book_id) " +
+                    "values(:author_id, :book_id)", source);*/
         });
     }
 
@@ -138,8 +119,8 @@ public class BookDaoImpl implements BookDao {
             source.addValue("author_id", author.getId());
             source.addValue("book_id", bookId);
 
-            jdbcTemplate.update("delete from authors_books " +
-                    "where author_id = :author_id and book_id = :book_id", source);
+            /*jdbcTemplate.update("delete from authors_books " +
+                    "where author_id = :author_id and book_id = :book_id", source);*/
         });
     }
 
@@ -149,8 +130,8 @@ public class BookDaoImpl implements BookDao {
             source.addValue("book_id", bookId);
             source.addValue("genre_id", genre.getId());
 
-            jdbcTemplate.update("insert into books_genres (book_id, genre_id) " +
-                    "values(:book_id, :genre_id)", source);
+            /*jdbcTemplate.update("insert into books_genres (book_id, genre_id) " +
+                    "values(:book_id, :genre_id)", source);*/
         });
     }
 
@@ -160,8 +141,8 @@ public class BookDaoImpl implements BookDao {
             source.addValue("book_id", bookId);
             source.addValue("genre_id", genre.getId());
 
-            jdbcTemplate.update("delete from books_genres " +
-                    "where book_id = :book_id and genre_id = :genre_id", source);
+            /*jdbcTemplate.update("delete from books_genres " +
+                    "where book_id = :book_id and genre_id = :genre_id", source);*/
         });
     }
 }

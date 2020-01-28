@@ -11,8 +11,6 @@ public interface GenreService {
 
     void update(Genre genre);
 
-    void deleteAll();
-
     void deleteById(Long id);
 
     List<Genre> findGenresByBookId(Long bookId);

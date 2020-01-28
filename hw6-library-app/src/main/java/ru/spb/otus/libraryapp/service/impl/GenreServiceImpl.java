@@ -46,12 +46,6 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional
-    public void deleteAll() {
-        genreDao.deleteAll();
-    }
-
-    @Override
-    @Transactional
     public void deleteById(Long id) {
         Assert.notNull(id, "Genre id is null !");
 

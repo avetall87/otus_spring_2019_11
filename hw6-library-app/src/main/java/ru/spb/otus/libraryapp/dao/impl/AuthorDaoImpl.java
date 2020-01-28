@@ -8,7 +8,6 @@ import ru.spb.otus.libraryapp.domain.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.List;
 
 @Slf4j
@@ -21,14 +20,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findById(Long id) {
-        try {
-            Query query = em.createQuery("select a from Author a where a.id = :id");
-            query.setParameter("id", id);
-            return (Author) query.getSingleResult();
-        } catch (Exception ex) {
-            log.error("Author findById exception", ex);
-            return null;
-        }
+        return em.find(Author.class, id);
     }
 
     @Override
@@ -47,37 +39,35 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void update(Author author) {
-        Query update = em.createQuery("update Author a set " +
+        em.createQuery("update Author a set " +
                 "a.firstName = :first_name, " +
                 "a.lastName = :last_name, " +
                 "a.patronymic = :patronymic " +
-                "where a.id = :id");
-
-        update.setParameter("first_name", author.getFirstName());
-        update.setParameter("last_name", author.getLastName());
-        update.setParameter("patronymic", author.getPatronymic());
-        update.setParameter("id", author.getId());
-
-        update.executeUpdate();
+                "where a.id = :id")
+                .setParameter("first_name", author.getFirstName())
+                .setParameter("last_name", author.getLastName())
+                .setParameter("patronymic", author.getPatronymic())
+                .setParameter("id", author.getId())
+                .executeUpdate();
     }
 
     @Override
     public void deleteById(Long id) {
         em.detach(Author.builder().id(id).build());
 
-        Query query = em.createQuery("delete from Author a where a.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        em.createQuery("delete from Author a where a.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Author> findAuthorsByBookId(Long bookId) {
-        Query nativeQuery = em.createNativeQuery("select a.id, a.first_name, a.last_name, a.patronymic " +
+        return em.createNativeQuery("select a.id, a.first_name, a.last_name, a.patronymic " +
                 "from authors a " +
                 "join authors_books ab on a.id = ab.author_id " +
-                "where ab.book_id = :bookId", Author.class);
-        nativeQuery.setParameter("bookId", bookId);
-
-        return nativeQuery.getResultList();
+                "where ab.book_id = :bookId", Author.class)
+                .setParameter("bookId", bookId)
+                .getResultList();
     }
 }

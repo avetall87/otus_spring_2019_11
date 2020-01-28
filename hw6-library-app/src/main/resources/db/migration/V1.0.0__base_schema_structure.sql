@@ -44,3 +44,13 @@ create table books_genres
 
 create index books_genres_book_id ON books_genres (book_id);
 create index books_genres_genre_id ON books_genres (genre_id);
+
+create table comments
+(
+    id      long auto_increment
+        constraint comment_pk PRIMARY KEY,
+    book_id long           not null references books (id) on delete cascade,
+    comment varchar2(4000) not null
+);
+
+create index comments_idx ON comments (book_id);

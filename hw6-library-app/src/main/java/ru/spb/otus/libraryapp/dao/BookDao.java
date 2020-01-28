@@ -7,15 +7,14 @@ import ru.spb.otus.libraryapp.domain.Genre;
 import java.util.List;
 
 public interface BookDao {
+
     Book findById(Long id);
 
     List<Book> findAll();
 
-    void create(Book book);
+    void save(Book book);
 
     void update(Book book);
-
-    void deleteAll();
 
     void deleteById(Long id);
 
@@ -30,4 +29,5 @@ public interface BookDao {
     void deleteAuthor(Long bookId, Author author);
 
     void deleteGenre(Long bookId, Genre genre);
+
 }

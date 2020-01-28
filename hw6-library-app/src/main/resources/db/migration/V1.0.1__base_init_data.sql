@@ -33,3 +33,10 @@ insert into books_genres (book_id, genre_id)
 values (100, 100);
 insert into books_genres (book_id, genre_id)
 values (101, 115);
+
+insert into comments (book_id, comment)
+values (100, 'comment1');
+insert into comments (book_id, comment)
+values (100, 'comment2');
+insert into comments (book_id, comment)
+values (100, 'comment3');
