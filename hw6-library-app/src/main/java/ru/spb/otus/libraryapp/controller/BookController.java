@@ -66,13 +66,6 @@ public class BookController {
         System.out.println(format("Book was successfully deleted by id=%s", id));
     }
 
-    @ShellMethod(value = "Delete all genres", key = "book_delete_all")
-    public void deleteAll() {
-        bookService.deleteAll();
-
-        System.out.println("All books was successfully deleted !");
-    }
-
     @ShellMethod(value = "Find all books by author id", key = "book_find_by_author_id")
     public void findAllByAuthorId(Long authorId) {
         List<Book> books = bookService.findByAuthor(Author.builder().id(authorId).build());
@@ -121,6 +114,13 @@ public class BookController {
         bookService.deleteAuthor(Book.builder().id(bookId).build(), Author.builder().id(authorId).build());
 
         System.out.println(format("Author(id=%s) was successfully removed from book with id=%s", authorId, bookId));
+    }
+
+    @ShellMethod(value = "Add comment to current book", key = "book_add_comment_to_book_by_key")
+    public void addComment(Long bookId, String comment) {
+        bookService.addComment(Book.builder().id(bookId).build(), comment);
+
+        System.out.println(format("Comment (%s) was successfully added to book with id=%s", comment, bookId));
     }
 
 }

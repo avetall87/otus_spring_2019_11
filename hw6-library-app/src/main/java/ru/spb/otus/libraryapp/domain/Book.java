@@ -38,7 +38,8 @@ public class Book {
     private List<Genre> genres;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Comment.class, mappedBy = "bookId")
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Comment.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "comments", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "id"))
     private List<Comment> comments;
 
 }

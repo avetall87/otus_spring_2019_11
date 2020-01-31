@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
+import ru.spb.otus.libraryapp.domain.Comment;
 import ru.spb.otus.libraryapp.domain.Genre;
 
 import javax.persistence.EntityManager;
@@ -130,6 +131,17 @@ public class BookDaoImpl implements BookDao {
     public void deleteGenre(Long bookId, Genre genre) {
         em.detach(em.find(Genre.class, genre.getId()));
         em.createQuery("delete from Genre g where g.id = :id").setParameter("id", genre.getId()).executeUpdate();
+    }
+
+    @Override
+    public void addComment(Long bookId, String comment) {
+        Book book = em.find(Book.class, bookId);
+
+        if (nonNull(book)) {
+            book.getComments().add(Comment.builder().comment(comment).build());
+
+            save(book);
+        }
     }
 
 }

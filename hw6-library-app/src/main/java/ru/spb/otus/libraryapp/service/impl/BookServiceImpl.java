@@ -60,12 +60,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteAll() {
-
-    }
-
-    @Override
-    @Transactional
     public void deleteById(Long id) {
         Assert.notNull(id, "Book id is null !");
 
@@ -110,5 +104,11 @@ public class BookServiceImpl implements BookService {
     public void deleteGenre(Book book, Genre genre) {
         bookDao.deleteGenre(book.getId(), genre);
         book.getGenres().remove(genre);
+    }
+
+    @Override
+    @Transactional
+    public void addComment(Book book, String comment) {
+        bookDao.addComment(book.getId(), comment);
     }
 }

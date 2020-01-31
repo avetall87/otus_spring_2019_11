@@ -20,9 +20,5 @@ public class Comment {
     private Long id;
 
     @Column(nullable = false)
-    private Long bookId;
-
-    @Column(nullable = false)
     private String comment;
-
 }

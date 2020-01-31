@@ -30,4 +30,5 @@ public interface BookDao {
 
     void deleteGenre(Long bookId, Genre genre);
 
+    void addComment(Long bookId, String comment);
 }

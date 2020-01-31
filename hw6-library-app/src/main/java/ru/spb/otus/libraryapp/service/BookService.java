@@ -13,8 +13,6 @@ public interface BookService {
 
     void update(Book book);
 
-    void deleteAll();
-
     void deleteById(Long id);
 
     List<Book> findByAuthor(Author author);
@@ -29,4 +27,5 @@ public interface BookService {
 
     void deleteGenre(Book book, Genre genre);
 
+    void addComment(Book book, String comment);
 }
