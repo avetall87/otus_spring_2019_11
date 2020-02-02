@@ -2,6 +2,7 @@ package ru.spb.otus.libraryapp.service;
 
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
+import ru.spb.otus.libraryapp.domain.Comment;
 import ru.spb.otus.libraryapp.domain.Genre;
 
 import java.util.List;
@@ -27,5 +28,5 @@ public interface BookService {
 
     void deleteGenre(Book book, Genre genre);
 
-    void addComment(Book book, String comment);
+    void addComment(Book book, Comment comment);
 }

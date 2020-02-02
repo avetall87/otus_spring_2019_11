@@ -21,4 +21,7 @@ public class Comment {
 
     @Column(nullable = false)
     private String comment;
+
+    @Column(name = "book_id", nullable = false)
+    private Long bookId;
 }

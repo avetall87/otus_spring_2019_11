@@ -38,7 +38,7 @@ class AuthorServiceImplTest {
     }
 
     @Test
-    @DisplayName("Создание нового автора ")
+    @DisplayName("Создание нового автора")
     void createNewAuthor() {
         Author author = Author.builder().firstName("test").lastName("test").patronymic("tesr").build();
 

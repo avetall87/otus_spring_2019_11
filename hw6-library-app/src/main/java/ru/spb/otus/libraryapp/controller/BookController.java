@@ -5,6 +5,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
+import ru.spb.otus.libraryapp.domain.Comment;
 import ru.spb.otus.libraryapp.domain.Genre;
 import ru.spb.otus.libraryapp.service.BookService;
 
@@ -118,7 +119,7 @@ public class BookController {
 
     @ShellMethod(value = "Add comment to current book", key = "book_add_comment_to_book_by_key")
     public void addComment(Long bookId, String comment) {
-        bookService.addComment(Book.builder().id(bookId).build(), comment);
+        bookService.addComment(Book.builder().id(bookId).build(), Comment.builder().comment(comment).build());
 
         System.out.println(format("Comment (%s) was successfully added to book with id=%s", comment, bookId));
     }

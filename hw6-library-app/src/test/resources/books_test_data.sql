@@ -41,6 +41,8 @@ values ('name_book', 'description');
 insert into authors_books (author_id, book_id)
 values (110, 100);
 insert into authors_books (author_id, book_id)
+values (101, 100);
+insert into authors_books (author_id, book_id)
 values (115, 101);
 
 insert into books_genres (book_id, genre_id)

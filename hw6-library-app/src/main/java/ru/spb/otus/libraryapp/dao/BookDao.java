@@ -29,6 +29,4 @@ public interface BookDao {
     void deleteAuthor(Long bookId, Author author);
 
     void deleteGenre(Long bookId, Genre genre);
-
-    void addComment(Long bookId, String comment);
 }

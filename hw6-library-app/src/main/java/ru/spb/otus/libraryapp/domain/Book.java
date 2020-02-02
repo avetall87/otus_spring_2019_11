@@ -16,6 +16,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(name = "comment-entity-graphs", attributeNodes = {@NamedAttributeNode(value = "comments")})
+@NamedEntityGraph(name = "author-entity-graphs", attributeNodes = {@NamedAttributeNode(value = "authors")})
+@NamedEntityGraph(name = "genre-entity-graphs", attributeNodes = {@NamedAttributeNode(value = "genres")})
 public class Book {
 
     @Id

@@ -7,9 +7,11 @@ import org.springframework.util.Assert;
 import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
+import ru.spb.otus.libraryapp.domain.Comment;
 import ru.spb.otus.libraryapp.domain.Genre;
 import ru.spb.otus.libraryapp.service.AuthorService;
 import ru.spb.otus.libraryapp.service.BookService;
+import ru.spb.otus.libraryapp.service.CommentService;
 import ru.spb.otus.libraryapp.service.GenreService;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final AuthorService authorService;
     private final GenreService genreService;
+    private final CommentService commentService;
 
     @Override
     @Transactional(readOnly = true)
@@ -108,7 +111,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void addComment(Book book, String comment) {
-        bookDao.addComment(book.getId(), comment);
+    public void addComment(Book book, Comment comment) {
+        commentService.add(book, comment);
     }
 }

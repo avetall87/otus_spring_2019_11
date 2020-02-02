@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
-import ru.spb.otus.libraryapp.domain.Comment;
 import ru.spb.otus.libraryapp.domain.Genre;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +23,22 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findById(Long id) {
-        return em.find(Book.class, id);
+        EntityGraph<?> entityGraph = em.getEntityGraph("comment-entity-graphs");
+
+        return em.createQuery("select b from Book b left join fetch b.comments where b.id = :id", Book.class)
+                .setHint("javax.persistence.fetchgraph", entityGraph)
+                .setParameter("id", id)
+                .getSingleResult();
+
     }
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("select b from Book b", Book.class).getResultList();
+        EntityGraph<?> entityGraph = em.getEntityGraph("comment-entity-graphs");
+
+        return em.createQuery("select b from Book b left join fetch b.comments", Book.class)
+                .setHint("javax.persistence.fetchgraph", entityGraph)
+                .getResultList();
     }
 
     @Override
@@ -132,16 +142,4 @@ public class BookDaoImpl implements BookDao {
         em.detach(em.find(Genre.class, genre.getId()));
         em.createQuery("delete from Genre g where g.id = :id").setParameter("id", genre.getId()).executeUpdate();
     }
-
-    @Override
-    public void addComment(Long bookId, String comment) {
-        Book book = em.find(Book.class, bookId);
-
-        if (nonNull(book)) {
-            book.getComments().add(Comment.builder().comment(comment).build());
-
-            save(book);
-        }
-    }
-
 }
