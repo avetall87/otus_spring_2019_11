@@ -75,4 +75,11 @@ public class AuthorController {
         System.out.println(format("Author was successfully deleted by id=%s", id));
     }
 
+    @ShellMethod(value = "Find author books by author id", key = "book_find_author_books")
+    public void findAuthorBooks(Long id) {
+        String books = authorService.findAuthorBooks(id);
+
+        System.out.println(books);
+    }
+
 }

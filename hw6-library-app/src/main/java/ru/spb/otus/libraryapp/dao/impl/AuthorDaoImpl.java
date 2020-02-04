@@ -3,6 +3,7 @@ package ru.spb.otus.libraryapp.dao.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
 import ru.spb.otus.libraryapp.domain.Author;
 
@@ -19,6 +20,7 @@ public class AuthorDaoImpl implements AuthorDao {
     private EntityManager em;
 
     @Override
+    @Transactional(readOnly = true)
     public Author findById(Long id) {
         return em.find(Author.class, id);
     }

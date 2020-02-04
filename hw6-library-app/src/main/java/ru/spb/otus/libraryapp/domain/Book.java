@@ -1,9 +1,6 @@
 package ru.spb.otus.libraryapp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -11,6 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
+@ToString(exclude = {"authors", "genres"})
 @Table(name = "books")
 @Entity
 @Builder
@@ -41,7 +39,7 @@ public class Book {
     private List<Genre> genres;
 
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Comment.class, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Comment.class, cascade = CascadeType.ALL)
     @JoinTable(name = "comments", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "id"))
     private List<Comment> comments;
 

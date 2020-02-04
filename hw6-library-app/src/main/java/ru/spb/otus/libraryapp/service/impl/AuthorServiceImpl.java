@@ -1,6 +1,7 @@
 package ru.spb.otus.libraryapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -11,6 +12,7 @@ import ru.spb.otus.libraryapp.service.AuthorService;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +57,17 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<Author> findAuthorsByBookId(Long bookId) {
         return authorDao.findAuthorsByBookId(bookId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String findAuthorBooks(Long authorId) {
+        Author author = authorDao.findById(authorId);
+
+        if (nonNull(author) && CollectionUtils.isNotEmpty(author.getBooks())) {
+            return author.getBooks().toString();
+        } else {
+            return EMPTY;
+        }
     }
 }
