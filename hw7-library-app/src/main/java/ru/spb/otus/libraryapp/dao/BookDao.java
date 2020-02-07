@@ -1,32 +1,22 @@
 package ru.spb.otus.libraryapp.dao;
 
-import ru.spb.otus.libraryapp.domain.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.spb.otus.libraryapp.domain.Book;
-import ru.spb.otus.libraryapp.domain.Genre;
 
-import java.util.List;
+public interface BookDao extends JpaRepository<Book, Long> {
 
-public interface BookDao {
+    @Modifying
+    @Query("update Book b set b.name=:name, b.description=:description where b.id=:id")
+    void update(@Param("name") String name, @Param("description") String description, @Param("id") Long id);
 
-    Book findById(Long id);
-
-    List<Book> findAll();
-
-    void save(Book book);
-
-    void update(Book book);
-
-    void deleteById(Long id);
-
-    List<Book> findByAuthor(Author author);
-
-    List<Book> findByGenre(Genre genre);
-
-    void addAuthor(Long bookId, Author author);
-
-    void addGenre(Long bookId, Genre genre);
-
-    void deleteAuthor(Long bookId, Author author);
-
-    void deleteGenre(Long bookId, Genre genre);
+//    void addAuthor(Long bookId, Author author);
+//
+//    void addGenre(Long bookId, Genre genre);
+//
+//    void deleteAuthor(Long bookId, Author author);
+//
+//    void deleteGenre(Long bookId, Genre genre);
 }

@@ -5,18 +5,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
+import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
+import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.service.AuthorService;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Service
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorDao authorDao;
+    private final BookDao bookDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,7 +62,16 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Author> findAuthorsByBookId(Long bookId) {
-        return authorDao.findAuthorsByBookId(bookId);
+        Assert.notNull(bookId, "Book id is null !");
+
+        Book book = bookDao.findById(bookId);
+
+        if (nonNull(book) && isNotEmpty(book.getAuthors())) {
+            return book.getAuthors();
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

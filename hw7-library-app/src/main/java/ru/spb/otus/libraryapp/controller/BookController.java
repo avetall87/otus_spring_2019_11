@@ -3,10 +3,8 @@ package ru.spb.otus.libraryapp.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.domain.Comment;
-import ru.spb.otus.libraryapp.domain.Genre;
 import ru.spb.otus.libraryapp.service.BookService;
 
 import java.util.List;
@@ -69,7 +67,7 @@ public class BookController {
 
     @ShellMethod(value = "Find all books by author id", key = "book_find_by_author_id")
     public void findAllByAuthorId(Long authorId) {
-        List<Book> books = bookService.findByAuthor(Author.builder().id(authorId).build());
+        List<Book> books = bookService.findByAuthor(authorId);
 
         if (isNotEmpty(books)) {
             books.forEach(System.out::println);
@@ -80,7 +78,7 @@ public class BookController {
 
     @ShellMethod(value = "Find all books by genre id", key = "book_find_by_genre_id")
     public void findAllByGenreId(Long genreId) {
-        List<Book> books = bookService.findByGenre(Genre.builder().id(genreId).build());
+        List<Book> books = bookService.findByGenre(genreId);
 
         if (isNotEmpty(books)) {
             books.forEach(System.out::println);
@@ -91,35 +89,35 @@ public class BookController {
 
     @ShellMethod(value = "Add author to book by id", key = "book_add_author_to_book_by_id")
     public void addAuthorToBook(Long bookId, Long authorId) {
-        bookService.addAuthor(Book.builder().id(bookId).build(), Author.builder().id(authorId).build());
+        bookService.addAuthor(bookId, authorId);
 
         System.out.println(format("Author(id=%s) was successfully add to book with id=%s", authorId, bookId));
     }
 
     @ShellMethod(value = "Add genre to book by id", key = "book_add_genre_to_book_by_id")
     public void addGenreToBook(Long bookId, Long genreId) {
-        bookService.addGenre(Book.builder().id(bookId).build(), Genre.builder().id(genreId).build());
+        bookService.addGenre(bookId, genreId);
 
         System.out.println(format("Genre(id=%s) was successfully add to book with id=%s", genreId, bookId));
     }
 
     @ShellMethod(value = "Delete author from book by id", key = "book_delete_author_from_book_by_id")
     public void deleteAuthor(Long bookId, Long authorId) {
-        bookService.deleteAuthor(Book.builder().id(bookId).build(), Author.builder().id(authorId).build());
+        bookService.deleteAuthor(bookId, authorId);
 
         System.out.println(format("Author(id=%s) was successfully removed from book with id=%s", authorId, bookId));
     }
 
     @ShellMethod(value = "Delete genre from book by id", key = "book_delete_genre_from_book_by_id")
     public void genreAuthor(Long bookId, Long authorId) {
-        bookService.deleteAuthor(Book.builder().id(bookId).build(), Author.builder().id(authorId).build());
+        bookService.deleteAuthor(bookId, authorId);
 
         System.out.println(format("Author(id=%s) was successfully removed from book with id=%s", authorId, bookId));
     }
 
     @ShellMethod(value = "Add comment to current book", key = "book_add_comment_to_book_by_key")
     public void addComment(Long bookId, String comment) {
-        bookService.addComment(Book.builder().id(bookId).build(), Comment.builder().comment(comment).build());
+        bookService.addComment(bookId, Comment.builder().comment(comment).build());
 
         System.out.println(format("Comment (%s) was successfully added to book with id=%s", comment, bookId));
     }

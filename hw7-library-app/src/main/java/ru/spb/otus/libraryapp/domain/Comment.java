@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
@@ -22,6 +24,8 @@ public class Comment {
     @Column(nullable = false)
     private String comment;
 
-    @Column(name = "book_id", nullable = false)
-    private Long bookId;
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_id")
+    private Book book;
 }

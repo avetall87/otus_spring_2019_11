@@ -1,9 +1,7 @@
 package ru.spb.otus.libraryapp.service;
 
-import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
 import ru.spb.otus.libraryapp.domain.Comment;
-import ru.spb.otus.libraryapp.domain.Genre;
 
 import java.util.List;
 
@@ -16,17 +14,17 @@ public interface BookService {
 
     void deleteById(Long id);
 
-    List<Book> findByAuthor(Author author);
+    List<Book> findByAuthor(Long id);
 
-    List<Book> findByGenre(Genre genre);
+    List<Book> findByGenre(Long id);
 
-    void addAuthor(Book book, Author author);
+    void addAuthor(Long bookId, Long authorId);
 
-    void addGenre(Book book, Genre genre);
+    void addGenre(Long bookId, Long genreId);
 
-    void deleteAuthor(Book book, Author author);
+    void deleteAuthor(Long bookId, Long authorId);
 
-    void deleteGenre(Book book, Genre genre);
+    void deleteGenre(Long bookId, Long genreId);
 
-    void addComment(Book book, Comment comment);
+    void addComment(Long bookId, Comment comment);
 }

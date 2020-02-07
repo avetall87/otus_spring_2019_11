@@ -1,6 +1,5 @@
 package ru.spb.otus.libraryapp.dao.impl;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +10,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
 import ru.spb.otus.libraryapp.controller.AuthorController;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
+import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
-
-import java.util.List;
 
 @DataJpaTest
 @Sql("classpath:authors_test_data.sql")
@@ -24,6 +22,9 @@ class AuthorDaoImplTest {
 
     @Autowired
     private AuthorDao authorDao;
+
+    @Autowired
+    private BookDao bookDao;
 
     @Test
     void findById() {
@@ -75,11 +76,5 @@ class AuthorDaoImplTest {
         Author author = authorDao.findById(DELETE_AUTHOR_ID).orElse(null);
 
         Assertions.assertNull(author);
-    }
-
-    @Test
-    void findAuthorsByBookId() {
-        List<Author> authors = authorDao.findAuthorsByBookId(AUTHOR_ID);
-        Assertions.assertTrue(CollectionUtils.isNotEmpty(authors));
     }
 }

@@ -75,14 +75,4 @@ class GenreDaoImplTest {
 
         SoftAssertions.assertSoftly(softAssertions -> softAssertions.assertThat(genre).isNull());
     }
-
-    @Test
-    void findGenresByBookId() {
-        List<Genre> genresByBookId = genreDao.findGenresByBookId(100L);
-
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(genresByBookId).isNotNull();
-            softAssertions.assertThat(genresByBookId.size()).isGreaterThan(0);
-        });
-    }
 }

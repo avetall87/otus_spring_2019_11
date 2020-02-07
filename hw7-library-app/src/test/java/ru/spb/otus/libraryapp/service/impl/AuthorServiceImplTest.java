@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
+import ru.spb.otus.libraryapp.dao.BookDao;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.service.AuthorService;
 
@@ -16,11 +17,14 @@ class AuthorServiceImplTest {
 
     private AuthorService authorService;
     private AuthorDao authorDao;
+    private BookDao bookDao;
 
     @BeforeEach
     void setUp() {
         authorDao = Mockito.mock(AuthorDao.class);
-        authorService = new AuthorServiceImpl(authorDao);
+        bookDao = Mockito.mock(BookDao.class);
+
+        authorService = new AuthorServiceImpl(authorDao, bookDao);
     }
 
     @Test
