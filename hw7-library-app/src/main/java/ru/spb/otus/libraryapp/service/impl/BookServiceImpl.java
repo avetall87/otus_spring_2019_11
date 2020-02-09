@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.spb.otus.libraryapp.dao.AuthorDao;
 import ru.spb.otus.libraryapp.dao.BookDao;
+import ru.spb.otus.libraryapp.dao.CommentDao;
 import ru.spb.otus.libraryapp.dao.GenreDao;
 import ru.spb.otus.libraryapp.domain.Author;
 import ru.spb.otus.libraryapp.domain.Book;
@@ -13,8 +14,10 @@ import ru.spb.otus.libraryapp.domain.Comment;
 import ru.spb.otus.libraryapp.domain.Genre;
 import ru.spb.otus.libraryapp.service.BookService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -27,6 +30,7 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final AuthorDao authorDao;
     private final GenreDao genreDao;
+    private final CommentDao commentDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -98,7 +102,7 @@ public class BookServiceImpl implements BookService {
     public List<Book> findByGenre(Long id) {
         Genre genre = genreDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Genre id is null !"));
 
-        if (isNotEmpty(genre.getBooks())) {
+        if (!isNotEmpty(genre.getBooks())) {
             genre.setBooks(Collections.emptyList());
         }
 
@@ -115,7 +119,9 @@ public class BookServiceImpl implements BookService {
         if (isNotEmpty(book.getAuthors())) {
             book.getAuthors().add(author);
         } else {
-            book.setAuthors(Collections.singletonList(author));
+            List<Author> authors = new ArrayList<>();
+            authors.add(author);
+            book.setAuthors(authors);
         }
 
         bookDao.save(book);
@@ -128,10 +134,12 @@ public class BookServiceImpl implements BookService {
 
         Genre genre = genreDao.findById(genreId).orElseThrow(() -> new IllegalArgumentException("Genre id is null !"));
 
-        if (isNotEmpty(book.getAuthors())) {
+        if (isNotEmpty(book.getGenres())) {
             book.getGenres().add(genre);
         } else {
-            book.setGenres(Collections.singletonList(genre));
+            List<Genre> genres = new ArrayList<>();
+            genres.add(genre);
+            book.setGenres(genres);
         }
 
         bookDao.save(book);
@@ -140,12 +148,12 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteAuthor(Long bookId, Long authorId) {
-        Assert.isNull(authorId, "Author id is null !");
+        Assert.notNull(authorId, "Author id is null !");
 
         Book book = getBook(bookId);
 
         if (isNotEmpty(book.getAuthors())) {
-            List<Author> processedAuthors = book.getAuthors().stream().filter(author -> author.getId() != authorId).collect(Collectors.toList());
+            List<Author> processedAuthors = book.getAuthors().stream().filter(author -> !Objects.equals(author.getId(), authorId)).collect(Collectors.toList());
             book.setAuthors(processedAuthors);
 
             bookDao.save(book);
@@ -155,12 +163,12 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteGenre(Long bookId, Long genreId) {
-        Assert.isNull(genreId, "Genre id is null !");
+        Assert.notNull(genreId, "Genre id is null !");
 
         Book book = getBook(bookId);
 
         if (isNotEmpty(book.getGenres())) {
-            List<Genre> processedGenres = book.getGenres().stream().filter(genre -> genre.getId() != genreId).collect(Collectors.toList());
+            List<Genre> processedGenres = book.getGenres().stream().filter(genre -> !Objects.equals(genre.getId(), genreId)).collect(Collectors.toList());
             book.setGenres(processedGenres);
 
             bookDao.save(book);
@@ -170,15 +178,10 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void addComment(Long bookId, Comment comment) {
-        Book book = getBook(bookId);
+        Assert.notNull(comment, "Comment is null !");
 
-        if (isNotEmpty(book.getComments())) {
-            book.getComments().add(comment);
-        } else {
-            book.setComments(Collections.singletonList(comment));
-        }
-
-        bookDao.save(book);
+        comment.setBook(getBook(bookId));
+        commentDao.save(comment);
     }
 
     private Book getBook(Long bookId) {

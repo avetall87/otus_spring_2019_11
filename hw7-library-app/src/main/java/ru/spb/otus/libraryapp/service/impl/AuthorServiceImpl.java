@@ -66,7 +66,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<Author> findAuthorsByBookId(Long bookId) {
         Assert.notNull(bookId, "Book id is null !");
 
-        Book book = bookDao.findById(bookId);
+        Book book = bookDao.findById(bookId).orElse(null);
 
         if (nonNull(book) && isNotEmpty(book.getAuthors())) {
             return book.getAuthors();

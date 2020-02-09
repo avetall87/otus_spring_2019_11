@@ -62,7 +62,7 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> findGenresByBookId(Long bookId) {
         Assert.notNull(bookId, "Book id is null !");
 
-        Book book = bookDao.findById(bookId);
+        Book book = bookDao.findById(bookId).orElse(null);
 
         if (nonNull(book) && isNotEmpty(book.getGenres())) {
             return book.getGenres();
