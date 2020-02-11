@@ -11,12 +11,4 @@ public interface BookDao extends JpaRepository<Book, Long> {
     @Modifying
     @Query("update Book b set b.name=:name, b.description=:description where b.id=:id")
     void update(@Param("name") String name, @Param("description") String description, @Param("id") Long id);
-
-//    void addAuthor(Long bookId, Author author);
-//
-//    void addGenre(Long bookId, Genre genre);
-//
-//    void deleteAuthor(Long bookId, Author author);
-//
-//    void deleteGenre(Long bookId, Genre genre);
 }
