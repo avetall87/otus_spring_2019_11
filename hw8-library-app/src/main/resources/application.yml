@@ -3,19 +3,11 @@ logging:
     org:
       springframework:
         data: DEBUG
-
-mongodb:
-  host: 127.0.0.1
-  port: 27017
-  database: library-db
-  username: library
-  password: library
-
-#spring:
-#  data:
-#    mongodb:
-#      host: 127.0.0.1
-#      port: 27017
-#      database: library-db
-#      username: library
-#      password: library
+spring:
+  data:
+    mongodb:
+      uri: localhost
+      port: 27017
+      database: library-db
+      username: library
+      password: library
