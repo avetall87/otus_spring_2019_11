@@ -1,0 +1,13 @@
+logging:
+  level:
+    org:
+      springframework:
+        data: DEBUG
+spring:
+  data:
+    mongodb:
+      uri: localhost
+      port: 27017
+      database: library-db
+      username: library
+      password: library
