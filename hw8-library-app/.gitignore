@@ -41,4 +41,4 @@ out/
 ### Application ###
 spring-shell.log
 
-/data/
+data/
