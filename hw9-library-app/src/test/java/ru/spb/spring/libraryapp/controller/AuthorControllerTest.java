@@ -1,36 +1,53 @@
 package ru.spb.spring.libraryapp.controller;
 
-import org.junit.Ignore;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.spb.spring.libraryapp.AbstractIntegrationTest;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.spb.spring.libraryapp.repository.AuthorDao;
+import ru.spb.spring.libraryapp.repository.BookDao;
+import ru.spb.spring.libraryapp.repository.impl.AuthorDaoCustomImpl;
+import ru.spb.spring.libraryapp.repository.impl.BookDaoCustomImpl;
+import ru.spb.spring.libraryapp.service.AuthorService;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthorControllerTest extends AbstractIntegrationTest {
+@ExtendWith(SpringExtension.class)
+@AutoConfigureMockMvc
+@WebMvcTest(AuthorController.class)
+class AuthorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
+    @MockBean
+    private AuthorService authorService;
 
-    }
+    @MockBean
+    private BookDaoCustomImpl bookDaoCustom;
+
+    @MockBean
+    private AuthorDao authorDao;
+
+    @MockBean
+    private BookDao bookDao;
+
+    @MockBean
+    private AuthorDaoCustomImpl authorDaoCustomImpl;
 
     @Test
-    @Ignore
     void getAllBooks() throws Exception {
-        this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("Hello, World")));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/author/all")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
-    void getOne() {
+    void getOne() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/author/book/1")).andDo(print()).andExpect(status().isOk());
     }
 }
