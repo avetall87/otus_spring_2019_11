@@ -1,0 +1,48 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.2.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'ru.spb.spring'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+	implementation "org.apache.commons:commons-lang3:${apacheCommonsLang3Version}"
+	implementation "org.apache.commons:commons-collections4:4.1"
+	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
+	compile 'org.javassist:javassist:3.18.2-GA'
+	compile 'com.github.cloudyrock.mongock:mongock-core:3.2.1.BETA'
+	compile 'com.github.cloudyrock.mongock:mongock-spring:3.2.1.BETA'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testCompile "org.testcontainers:testcontainers:1.12.5"
+	testImplementation "org.testcontainers:junit-jupiter:1.12.5"
+	testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '2.2.0'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+}
+
+test {
+	useJUnitPlatform()
+}
