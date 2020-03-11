@@ -1,0 +1,55 @@
+PUT http://localhost:8080/book/update
+Content-Type: application/json
+
+{
+  "id": "5e45cabd5b820f78c28b22dd",
+  "name": "testName",
+  "description": "some sdfgsdfgsdfgsdfg",
+  "genres": null,
+  "comments": null,
+  "authors": [
+    {
+      "id": "5e6395757915cb4d16e191c5",
+      "firstName": "first name4",
+      "lastName": "last name4",
+      "patronymic": "patronymic4"
+    }
+  ]
+}
+
+###
+POST http://localhost:8080/book/delete/5e45cabd5b820f78c28b22dd
+
+###
+
+
+GET http://localhost:8080/author/get/all
+
+###
+
+
+PUT http://localhost:8080/book/update
+
+###
+
+
+POST http://localhost:8080/book/create
+Content-Type: application/json
+
+{
+  "id": "5e5ec1025965b52b16b6faf2",
+  "name": "testName2",
+  "description": "some description",
+  "genres": [
+    {
+      "name": "genre"
+    }
+  ],
+  "comments": [
+    {
+      "comment": "comment"
+    }
+  ]
+}
+
+###

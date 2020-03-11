@@ -3,12 +3,8 @@ logging:
     org:
       springframework:
         data: DEBUG
-
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: library-db
-      username: library
-      password: library
+      port: 0
+      database: test
