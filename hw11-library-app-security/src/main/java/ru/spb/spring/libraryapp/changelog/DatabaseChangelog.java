@@ -2,7 +2,8 @@ package ru.spb.spring.libraryapp.changelog;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,8 @@ import ru.spb.spring.libraryapp.domain.*;
 import java.util.List;
 
 @ChangeLog
-//@RequiredArgsConstructor
+@Component
 public class DatabaseChangelog {
-
-//    private final PasswordEncoder passwordEncoder;
 
     @ChangeSet(order = "001", id = "addAuthor", author = "avetall87")
     public void someChange1(MongoTemplate mongoTemplate) {
@@ -87,14 +86,15 @@ public class DatabaseChangelog {
         mongoTemplate.save(book);
     }
 
-    @ChangeSet(order = "005", id = "users", author = "avetall87")
+    @ChangeSet(order = "005", id = "adminUser", author = "avetall87")
     public void someChange5(MongoTemplate mongoTemplate) {
         User user = User.builder()
-                        .firstName("Иванов")
-                        .lastName("Иван")
-                        .patronymic("Иванович")
-                        .password("123")
-                        .build();
+                .firstName("Иванов")
+                .lastName("Иван")
+                .patronymic("Ивнаович")
+                .login("admin")
+                .password("admin")
+                .build();
 
         mongoTemplate.save(user);
     }

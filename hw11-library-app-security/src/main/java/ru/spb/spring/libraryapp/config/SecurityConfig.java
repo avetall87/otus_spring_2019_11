@@ -1,5 +1,6 @@
 package ru.spb.spring.libraryapp.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,12 +9,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserDetailsService dbAauthenticationService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -23,13 +28,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // и данные приходили каждый раз с запросом
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-//                .authorizeRequests().antMatchers( "/public" ).anonymous()
-//                .and()
-                .authorizeRequests().antMatchers("/", "/author/**", "/book/**").authenticated()
-                .and().anonymous().authorities("ROLE_ANONYMOUS").principal("ya")
+                .authorizeRequests().antMatchers( "/author/**", "/book/**").authenticated()
+                .and().anonymous().authorities("ROLE_ANONYMOUS").principal("user")
                 .and()
                 // Включает basic аутентификацию
-                .httpBasic()
+                .formLogin()
+                .loginPage("/login.html")
+                .passwordParameter("login")
+                .usernameParameter("password")
+//                .httpBasic()
+                .successForwardUrl("/library")
+                .failureForwardUrl("/error")
+                .defaultSuccessUrl("/secure/", false)
+                .and()
+                .headers().frameOptions().sameOrigin()
                 .and()
                 .rememberMe();
 
@@ -39,11 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin")
-                .password("admin")
-                .roles("ADMIN");
+    public void configure(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder) throws Exception {
+        auth.userDetailsService(dbAauthenticationService).passwordEncoder(passwordEncoder);
     }
 
     @SuppressWarnings("deprecation")
