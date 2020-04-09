@@ -1,0 +1,15 @@
+version: '3'
+services:
+  database:
+    image: 'mongo'
+    container_name: 'study-mongo-db'
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=library-db
+      - MONGO_INITDB_ROOT_USERNAME=library
+      - MONGO_INITDB_ROOT_PASSWORD=library
+    volumes:
+      - ./data/db:/data/db
+      - ./init-tmongo.js:/data/init
+    ports:
+      - '27017:27017'
