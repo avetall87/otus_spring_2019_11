@@ -1,0 +1,46 @@
+logging:
+  level:
+    org:
+      springframework:
+        data: DEBUG
+  file:
+    path: app-log
+
+spring:
+  data:
+    mongodb:
+      uri: localhost
+      port: 27017
+      database: library-db
+      username: library
+      password: library
+  jmx:
+    enabled: true
+  flyway:
+    baseline-on-migrate: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+  batch:
+    job:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  health:
+    diskspace:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+
+
+batch:
+  process:
+      step:
+        chunk:
+          size: 5
