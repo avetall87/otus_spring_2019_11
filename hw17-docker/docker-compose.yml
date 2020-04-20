@@ -5,7 +5,7 @@ services:
       - library-app
     ports:
       - '80:80'
-    image: library-app-web:latest
+    image: avetall87/library-app-web:latest
   library-app:
     depends_on:
       - database # старт после старта контейнера mongo
