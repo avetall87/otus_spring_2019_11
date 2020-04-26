@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-app-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: library-app-web
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: library-app-web
+    spec:
+      containers:
+        - image: avetall87/library-app-web:latest
+          imagePullPolicy: Always
+          name: library-app-web
+          ports:
+            - containerPort: 80

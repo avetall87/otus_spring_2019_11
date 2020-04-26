@@ -9,7 +9,7 @@ services:
   library-app:
     depends_on:
       - database # старт после старта контейнера mongo
-    image: 'library-app:latest'  # предварительно образ надо собрать команда для mac - sudo docker build -t "library-app:latest" .
+    image: 'library-app:latest'  # предварительно образ надо собрать команда для mac - sudo docker build -t "avetall87/library-app:latest" .
     container_name: 'library-app'
     ports:
     - '8080:8080'

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: study-mongo-dbo
+  name: study-mongo-dbo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: study-mongo-dbo
+    spec:
+      containers:
+        - name: study-mongo-dbo
+          image: mongo
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: "library-db"
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "library"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "library"
+          ports:
+            - name: study-mongo-dbo
+              containerPort: 27017
+              hostPort: 27017
