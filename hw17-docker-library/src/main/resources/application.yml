@@ -1,0 +1,32 @@
+logging:
+  level:
+    org:
+      springframework:
+        data: DEBUG
+  file:
+    path: app-log
+spring:
+  data:
+    mongodb:
+      uri: localhost
+      port: 27017
+      database: library-db
+      username: library
+      password: library
+  jmx:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  health:
+    diskspace:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8080
