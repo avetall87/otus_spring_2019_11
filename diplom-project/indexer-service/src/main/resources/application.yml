@@ -1,0 +1,38 @@
+elasticsearch:
+  host: localhost
+  port: 9200
+
+rest:
+  timeout:
+    millis:
+      connection: 60000
+      read: 60000
+  reddit:
+    service:
+      url: http://localhost:8083
+    scheduler:
+      question: 60000
+      topic: 60000
+
+
+integration:
+  bus:
+    queue:
+      size:
+        question: 1000
+        token: 100
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  health:
+    diskspace:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
