@@ -1,0 +1,48 @@
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgrespass
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+logging:
+  level:
+    ROOT: INFO
+
+rest:
+  reddit:
+    timeout:
+      millis:
+        connection: 60000
+        read: 60000
+
+integration:
+  bus:
+    queue:
+      size: 10
+
+reddit:
+  filter:
+    token: COVID-19
+
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  health:
+    diskspace:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
